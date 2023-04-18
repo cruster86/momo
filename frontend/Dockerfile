@@ -1,9 +1,9 @@
-FROM node:16 as builder
+FROM node:16.17.0-bullseye-slim
+ENV NODE_ENV production
 WORKDIR /usr/src/app
-COPY . .
-RUN npm install && npm install
-NODE_ENV=production VUE_APP_API_URL=http://localhost:8081 npm run serve
-
-FROM nginx:latest
-COPY --from=builder /usr/src/app/dist/frontend/* /usr/share/nginx/html/
+COPY --chown=node:node . .
+RUN npm ci --only=production
+USER node
+ENV VUE_APP_API_URL http://localhost:8081
+RUN npm run serve
 EXPOSE 8081
