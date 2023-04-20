@@ -40,6 +40,8 @@ build-image:
     - docker push $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION}
 
 security_scan:
+  needs: build-image
+    - job: 
   stage: scan
   image: 
     name: aquasec/trivy:latest
