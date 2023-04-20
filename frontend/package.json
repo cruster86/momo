@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test": "CI=true react-scripts test --env=jsdom"
+    "test": "jest"
   },
   "dependencies": {
     "axios": "^0.24.0",
