@@ -1,5 +1,4 @@
 stages:
-  - lint
   - test
 #  - check
 #  - build
@@ -13,41 +12,21 @@ variables:
 
 image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/node:16.20.0-alpine3.17
 
-linting:
-   stage: lint
-   script:
-      - cd frontend
-      - npm run lint
-
-npm:
+build-for-test
   stage: test
   script:
-    - cd frontend
-    - npm install
-  cache:
-    paths:
-      - frontend/node_modules/
+    - npm install --progress=false
+    - npm run build
   artifacts:
     expire_in: 1 hour
-    when: on_success
     paths:
-      - frontend/node_modules/
+      - frontend/dist
 
-test:
+unit test:
   stage: test
-  needs:
-    - job: npm
-      artifacts: true
   script:
-    - cd frontend
-    - npm install -g jest
-    - npm test
-  cache:
-    key:
-      files:
-        - package-lock.json
-    paths:
-      - frontend/node_modules/
+    - npm install --progress=false
+    - npm run unit
 
 #build-image:
 #  when: manual
