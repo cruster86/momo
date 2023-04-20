@@ -12,7 +12,7 @@ variables:
 
 image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/node:16.20.0-alpine3.17
 
-build-for-test
+build-for-test:
   stage: test
   script:
     - npm install --progress=false
@@ -22,9 +22,10 @@ build-for-test
     paths:
       - frontend/dist
 
-unit test:
+unit-test:
   stage: test
   script:
+    - cd frontend
     - npm install --progress=false
     - npm run unit
 
