@@ -8,5 +8,5 @@ RUN npm run build
 FROM gitlab.praktikum-services.ru:5050/zerodistance/momo-store/nginx:stable-alpine3.17-slim
 RUN rm -rf /usr/share/nginx/html/* && rm -rf /etc/nginx/conf.d/*
 COPY default.conf /etc/nginx/conf.d
-COPY --from=builder /usr/src/app/dist/ /usr/share/nginx/html
+COPY --from=builder /usr/src/app/dist/ /usr/share/nginx/html/
 EXPOSE 80

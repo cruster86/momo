@@ -1,6 +1,7 @@
 stages:
   - test
   - build
+  - scan
 
 include:
   - project: 'templates/ci'
@@ -37,3 +38,17 @@ build-image:
       --tag $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION}
       .
     - docker push $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION}
+
+security_scan:
+  stage: scan
+  image: 
+    name: aquasec/trivy:latest
+    entrypoint: [""]
+  services:
+    - docker:dind
+  script:
+    - trivy --no-progress --output scanning-report.txt  $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION}
+  artifacts:
+    expire_in: 1 hour
+    reports:
+      container_scanning: scanning-report.txt
