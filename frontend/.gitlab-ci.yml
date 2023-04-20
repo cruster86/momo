@@ -10,11 +10,10 @@ include:
 variables:
   VERSION: 1.0.${CI_PIPELINE_ID}
 
-build-for-test:
+build_for_test:
   image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/node:16.20.0-alpine3.17
   stage: test
   script:
-    - set -x
     - cd frontend
     - npm install --progress=false
     - npm run build
@@ -23,7 +22,7 @@ build-for-test:
     paths:
       - frontend/dist
 
-build-image:
+build_image:
   when: manual
   stage: build
   image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/docker:20.10.12-dind-rootless
@@ -33,10 +32,7 @@ build-image:
   script:
     - set -x
     - cd frontend
-    - >
-      docker build
-      --tag $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION}
-      .
+    - docker build -t $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION} .
     - docker push $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION}
 
 security_scan:
@@ -48,11 +44,12 @@ security_scan:
     entrypoint: [""]
   services:
     - docker:dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - trivy --quiet image
-      --no-progress --severity HIGH,CRITICAL --scanners vuln --output scanning-report.txt
+    - trivy --quiet image --no-progress --severity HIGH,CRITICAL --scanners vuln --output frontend-scan-report.txt
       $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION}
   artifacts:
     expire_in: 1 hour
     reports:
-      container_scanning: scanning-report.txt
+      container_scanning: frontend-scan-report.txt
