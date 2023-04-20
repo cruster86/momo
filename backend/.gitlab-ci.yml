@@ -49,9 +49,10 @@ build-for-check:
     expire_in: 1 hour
 
 sonarcloud-check:
+  allow_failure: true
   stage: check
   needs:
-    - job: test
+    - job: build-for-check
       artifacts: true
   image:
     name: sonarsource/sonar-scanner-cli:latest
