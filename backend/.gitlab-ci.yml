@@ -2,6 +2,8 @@ stages:
   - lint
   - test
   - pre-build
+  - check
+#  - build
 #  - release
 
 .go-cache:
@@ -37,7 +39,7 @@ test:
       - coverage.out
     expire_in: 1 hour
 
-build-for-test:
+build-for-check:
   image: golang:latest
   stage: pre-build
   script:
@@ -47,7 +49,7 @@ build-for-test:
     expire_in: 1 hour
 
 sonarcloud-check:
-  stage: test
+  stage: check
   needs:
     - job: test
       artifacts: true
