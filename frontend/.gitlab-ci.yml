@@ -1,0 +1,50 @@
+stages:
+#  - lint
+  - test
+#  - check
+#  - build
+
+include:
+  - project: 'templates/ci'
+    file: 'DockerInDockerTemplate.yml'
+
+variables:
+  VERSION: 1.0.${CI_PIPELINE_ID}
+
+npm:
+  stage: test
+  script:
+    - cd frontend
+    - npm install
+  cache:
+    paths:
+      - frontend/node_modules/
+  artifacts:
+    expire_in: 1 hour
+    when: on_success
+    paths:
+      - frontend/node_modules/
+
+test:
+  stage: test
+  dependencies:
+    - npm
+  script:
+    - cd frontend
+    - npm test
+
+#build-image:
+#  when: manual
+#  stage: build
+#  image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/docker:20.10.12-dind-rootless
+#  before_script:
+#    - until docker info; do sleep 1; done
+#    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#  script:
+#    - set -x
+#    - cd frontend
+#    - >
+#      docker build
+#      --tag $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION}
+#      .
+#    - docker push $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION}
