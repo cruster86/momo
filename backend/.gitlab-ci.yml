@@ -12,7 +12,7 @@ variables:
   VERSION: 1.0.${CI_PIPELINE_ID}
 
 #lint:
-#  image: golangci/golangci-lint:latest
+#  image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/golangci-lint:latest
 #  stage: lint
 #  variables:
 #    GOPATH: $CI_PROJECT_DIR/.go
@@ -25,7 +25,7 @@ variables:
 #    - golangci-lint run -v
 #
 #test:
-#  image: golang:latest
+#  image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/golang:latest
 #  stage: test
 #  script:
 #    - cd backend
@@ -41,7 +41,7 @@ variables:
 #    expire_in: 1 hour
 #
 #build-for-check:
-#  image: golang:latest
+#  image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/golang:latest
 #  stage: check
 #  script:
 #    - cd backend
@@ -57,7 +57,7 @@ variables:
 #    - job: build-for-check
 #      artifacts: true
 #  image:
-#    name: sonarsource/sonar-scanner-cli:latest
+#    name: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/sonar-scanner-cli:latest
 #    entrypoint: [""]
 #  variables:
 #    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
@@ -72,6 +72,7 @@ variables:
 #    - sonar-scanner
 
 build-image:
+  when: manual
   stage: build
   image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/docker:20.10.12-dind-rootless
   before_script:
