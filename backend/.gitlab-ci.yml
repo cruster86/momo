@@ -1,7 +1,7 @@
 stages:
   - lint
   - test
-#  - build
+  - pre-build
 #  - release
 
 image: golang:latest
@@ -36,6 +36,14 @@ test:
       - vet-report.json
       - test-report.json
       - coverage.out
+    expire_in: 1 hour
+
+pre-build:
+  stage: -prebuild
+  script:
+    - go build ./...
+  artifacts:
+    untracked: true
     expire_in: 1 hour
 
 sonarcloud-check:
