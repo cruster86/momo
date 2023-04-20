@@ -4,8 +4,6 @@ stages:
   - pre-build
 #  - release
 
-image: golang:latest
-
 .go-cache:
   variables:
     GOPATH: $CI_PROJECT_DIR/.go
@@ -24,6 +22,7 @@ lint:
     - golangci-lint run -v
 
 test:
+  image: golang:latest
   stage: test
   script:
     - cd backend
@@ -38,8 +37,9 @@ test:
       - coverage.out
     expire_in: 1 hour
 
-pre-build:
-  stage: -prebuild
+build-for-test:
+  image: golang:latest
+  stage: pre-build
   script:
     - go build ./...
   artifacts:
