@@ -28,6 +28,7 @@ unit-test:
   script:
     - cd frontend
     - npm install --progress=false
+    - npm install -g @vue/cli
     - npm run unit
 
 #build-image:
