@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "test": "cross-env CI=true react-scripts test --env=jsdom"
   },
   "dependencies": {
     "axios": "^0.24.0",
