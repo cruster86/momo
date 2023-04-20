@@ -15,6 +15,7 @@ image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/node:16.20.0-al
 build-for-test:
   stage: test
   script:
+    - cd frontend
     - npm install --progress=false
     - npm run build
   artifacts:
