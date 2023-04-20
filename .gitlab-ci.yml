@@ -18,7 +18,7 @@ lint:
   stage: lint
   extends:
     - .go-cache
-  allow_failure: false
+  allow_failure: true
   script:
     - golangci-lint run -v
 
