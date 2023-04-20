@@ -1,32 +1,22 @@
 stages:
-  - lint
-  - test
-#  - build
-#  - release
+  - module-pipelines
 
-image: golang:latest
+backend:
+  stage: module-pipelines
+  trigger:
+    include:
+      - "/backend/.gitlab-ci.yml"
+    strategy: depend
+  only:
+    changes:
+      - backend/**/*
 
-.go-cache:
-  variables:
-    GOPATH: $CI_PROJECT_DIR/.go
-  cache:
-    paths:
-      - .go/pkg/mod/
-
-lint:
-  image: golangci/golangci-lint:latest
-  stage: lint
-  extends:
-    - .go-cache
-  allow_failure: true
-  script:
-    - cd backend
-    - golangci-lint run -v
-
-test:
-  stage: test
-  script:
-    - cd backend
-    - go fmt $(go list ./... | grep -v /vendor/)
-    - go vet $(go list ./... | grep -v /vendor/)
-    - go test -race $(go list ./... | grep -v /vendor/)
+#frontend:
+#  stage: module-pipelines
+#  trigger:
+#    include:
+#      - "/frontend/.gitlab-ci.yml"
+#    strategy: depend
+#  only:
+#    changes:
+#      - frontend/**/*
