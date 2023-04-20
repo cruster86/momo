@@ -5,6 +5,13 @@ stages:
   - build
 #  - release
 
+include:
+  - project: 'templates/ci'
+    file: 'DockerInDockerTemplate.yml'
+
+variables:
+  VERSION: 1.0.${CI_PIPELINE_ID}
+
 .go-cache:
   variables:
     GOPATH: $CI_PROJECT_DIR/.go
@@ -70,31 +77,15 @@ sonarcloud-check:
 
 build-image:
   stage: build
-  services:
-    - docker:dind
-  image: docker:latest
+  image: docker:20.10.12-dind-rootless
+  image: docker:20.10.12-dind-rootless
   before_script:
-      - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - until docker info; do sleep 1; done
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-      - cd backend
-      - docker build -t ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID} .
-      - docker push ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID}
-      - docker tag ${CI_REGISTRY_IMAGE}:${CI_PIPELINE_ID} ${CI_REGISTRY_IMAGE}:latest
-      - docker push ${CI_REGISTRY_IMAGE}:latest
-
-
-#  script:
-#    - |
-#      if [[ "$CI_COMMIT_BRANCH" == "$CI_DEFAULT_BRANCH" ]]; then
-#        tag=""
-#        echo "Running on default branch '$CI_DEFAULT_BRANCH': tag = 'latest'"
-#      else
-#        tag=":$CI_COMMIT_REF_SLUG"
-#        echo "Running on branch '$CI_COMMIT_BRANCH': tag = $tag"
-#      fi
-#    - docker build -t "$CI_REGISTRY_IMAGE${tag}" .
-#    - docker push "$CI_REGISTRY_IMAGE${tag}"
-#  rules:
-#    - if: $CI_COMMIT_BRANCH
-#      exists:
-#        - Dockerfile
+    - cd backend
+    - >
+      docker build
+      --tag $CI_REGISTRY_IMAGE/momo-store-backend:$VERSION
+      .
+    - docker push $CI_REGISTRY_IMAGE/momo-store-backend:$VERSION
