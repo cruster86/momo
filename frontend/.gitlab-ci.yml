@@ -47,7 +47,9 @@ security_scan:
   services:
     - docker:dind
   script:
-    - trivy --no-progress --output scanning-report.txt  $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION}
+    - trivy --quiet image
+      --no-progress --severity HIGH,CRITICAL --scanners vuln --output scanning-report.txt
+      $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION}
   artifacts:
     expire_in: 1 hour
     reports:
