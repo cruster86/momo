@@ -1,7 +1,6 @@
 stages:
   - lint
   - test
-  - pre-build
   - check
 #  - build
 #  - release
@@ -34,15 +33,16 @@ test:
   artifacts:
     when: always
     paths:
-      - vet-report.json
-      - test-report.json
-      - coverage.out
+      - backend/vet-report.json
+      - backend/test-report.json
+      - backend/coverage.out
     expire_in: 1 hour
 
 build-for-check:
   image: golang:latest
-  stage: pre-build
+  stage: check
   script:
+    - cd backend
     - go build ./...
   artifacts:
     untracked: true
@@ -64,4 +64,5 @@ sonarcloud-check:
     paths:
       - .sonar/cache
   script:
+    - cd backend
     - sonar-scanner
