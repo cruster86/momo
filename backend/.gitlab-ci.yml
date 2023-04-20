@@ -54,7 +54,8 @@ sonarcloud-check:
   needs:
     - job: build-for-check
       artifacts: true
-  image: sonarsource/sonar-scanner-cli:latest
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
     entrypoint: [""]
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
