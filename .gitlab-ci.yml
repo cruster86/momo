@@ -1,6 +1,10 @@
 stages:
   - module-pipelines
 
+include:
+  - project: 'templates/ci'
+    file: 'DockerInDockerTemplate.yml'
+
 backend:
   stage: module-pipelines
   trigger:
