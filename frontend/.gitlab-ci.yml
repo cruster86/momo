@@ -22,6 +22,22 @@ build_for_test:
     paths:
       - frontend/dist
 
+sonarqube-sast:
+  stage: test
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  needs: 
+    - job: build_for_test
+  script:
+    - cd frontend
+    - >
+      sonar-scanner -Dsonar.qualitygate.wait=true
+      -Dsonar.projectKey=${SONAR_PROJECT_KEY_FRONT}
+      -Dsonar.sources=.
+      -Dsonar.host.url=${SONARQUBE_URL}
+      -Dsonar.login=${SONAR_LOGIN_FRONT}
+
 build_image:
   when: manual
   stage: build
