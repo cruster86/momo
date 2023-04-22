@@ -22,7 +22,7 @@ provider "yandex" {
 
 resource "yandex_iam_service_account" "myaccount" {
   name        = local.sa_name
-  description = "K8S zonal service account"
+  description = "K8S service account"
 }
 
 resource "yandex_resourcemanager_folder_iam_member" "k8s-clusters-agent" {
@@ -53,7 +53,7 @@ resource "yandex_kms_symmetric_key" "kms-key" {
   rotation_period   = "8760h" # 1 year.
 }
 
-resource "yandex_kubernetes_cluster" "k8s-zonal" {
+resource "yandex_kubernetes_cluster" "k8s-corpsehead" {
   network_id = yandex_vpc_network.mynet.id
   master {
     version = local.k8s_version
