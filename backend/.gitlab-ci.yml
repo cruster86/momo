@@ -63,7 +63,7 @@ build_code:
     - go build -o ./main ./cmd/api/
   artifacts:
     expire_in: 1 hour
-    path:
+    paths:
       - backend/main
 
 upload_nexus:
