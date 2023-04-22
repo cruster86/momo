@@ -53,7 +53,7 @@ build_image:
 
 security_scan:
   needs: 
-    - job: build-image
+    - job: build_image
   stage: scan
   image: 
     name: aquasec/trivy:latest
