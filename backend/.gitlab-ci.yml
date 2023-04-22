@@ -72,7 +72,7 @@ upload_nexus:
     - cd backend
     - tar czf momo-store-backend-${VERSION}.tar.gz main
     - >       
-      curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-store-backend-${VERSION}.tar.gz ${NEXUS_REPO_FRONT_URL}/momo-store-backend/${VERSION}/momo-store-backend-${VERSION}.tar.gz
+      curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-store-backend-${VERSION}.tar.gz ${NEXUS_REPO_BACK_URL}/momo-store-backend/${VERSION}/momo-store-backend-${VERSION}.tar.gz
   only:
     changes:
       - backend/*
@@ -80,7 +80,7 @@ upload_nexus:
     - build_code
 
 
-build_image:
+build_&_push_image:
   when: manual
   stage: build
   image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/docker:20.10.12-dind-rootless
@@ -88,14 +88,13 @@ build_image:
     - until docker info; do sleep 1; done
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - set -x
     - cd backend
     - docker build -t $CI_REGISTRY_IMAGE/momo-store-backend:${VERSION} .
     - docker push $CI_REGISTRY_IMAGE/momo-store-backend:${VERSION}
 
 security_scan:
   needs: 
-    - job: build_image
+    - job: build_&_push_image
   stage: scan
   image: 
     name: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/docker:20.10.12-dind-rootless
@@ -104,7 +103,10 @@ security_scan:
   before_script:
     - until docker info; do sleep 1; done
   script:
-    - docker run --rm -e TRIVY_USERNAME=$CI_REGISTRY_USER -e TRIVY_PASSWORD=$CI_REGISTRY_PASSWORD aquasec/trivy
+    - set -x
+    - cd backend
+    - docker run --rm -e TRIVY_USERNAME=$CI_REGISTRY_USER -e TRIVY_PASSWORD=$CI_REGISTRY_PASSWORD
+      gitlab.praktikum-services.ru:5050/zerodistance/momo-store/trivy:latest
       -q image --scanners vuln --severity HIGH,CRITICAL --output backend-scan-report.txt --no-progress
       $CI_REGISTRY_IMAGE/momo-store-backend:${VERSION} > backend-scan-report.txt
   artifacts:
