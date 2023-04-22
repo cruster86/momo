@@ -37,7 +37,7 @@ build_code:
     paths:
       - frontend/dist
 
-upload-to-nexus:
+upload_nexus:
   stage: upload
   script:
     - cd frontend

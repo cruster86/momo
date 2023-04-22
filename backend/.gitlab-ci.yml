@@ -62,10 +62,11 @@ build_code:
     - cd backend
     - go build -o ./main ./cmd/api/
   artifacts:
-    - backend/main
     expire_in: 1 hour
+    path:
+      - backend/main
 
-upload-to-nexus:
+upload_nexus:
   stage: upload
   script:
     - cd backend
