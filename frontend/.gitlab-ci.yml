@@ -27,8 +27,6 @@ sonarqube-sast:
   image:
     name: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/sonar-scanner-cli:latest
     entrypoint: [""]
-  needs: 
-    - job: build_for_test
   script:
     - cd frontend
     - >
