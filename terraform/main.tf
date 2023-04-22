@@ -127,7 +127,7 @@ resource "yandex_vpc_security_group" "k8s-public-services" {
 ############   Create cluster node group ############
 
 resource "yandex_kubernetes_node_group" "momo-group" {
-  cluster_id  = yandex_kubernetes_cluster.k8s-corpsehead.id
+  cluster_id  = "${yandex_kubernetes_cluster.k8s-corpsehead.id}"
   name        = "momo-group"
   description = "momo-group"
   version     = "1.22"
