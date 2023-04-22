@@ -62,7 +62,7 @@ build_&_push_image:
     - docker build -t $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION} .
     - docker push $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION}
 
-security_scan:
+image_scan:
   needs: 
     - job: build_&_push_image
   stage: scan
@@ -78,7 +78,7 @@ security_scan:
     - cd frontend
     - docker run --rm -e TRIVY_USERNAME=$CI_REGISTRY_USER -e TRIVY_PASSWORD=$CI_REGISTRY_PASSWORD
       gitlab.praktikum-services.ru:5050/zerodistance/momo-store/trivy:latest
-      -q image --scanners vuln --severity HIGH,CRITICAL --output backend-scan-report.txt --no-progress
+      image --scanners vuln --severity HIGH,CRITICAL --no-progress
       $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION} > frontend-scan-report.txt
   artifacts:
     expire_in: 1 hour
