@@ -1,6 +1,7 @@
 stages:
   - lint
   - test
+  - upload
   - build
   - scan
 
@@ -54,6 +55,30 @@ sonarqube-sast:
       -Dsonar.host.url=${SONARQUBE_URL}
       -Dsonar.login=${SONAR_LOGIN_FRONT}
 
+build_code:
+  image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/golang:latest
+  stage: upload
+  script:
+    - cd backend
+    - go build -o ./main ./cmd/api/
+  artifacts:
+    - backend/main
+    expire_in: 1 hour
+
+upload-to-nexus:
+  stage: upload
+  script:
+    - cd backend
+    - tar czf momo-store-backend-${VERSION}.tar.gz main
+    - >       
+      curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-store-backend-${VERSION}.tar.gz ${NEXUS_REPO_FRONT_URL}/momo-store-backend/${VERSION}/momo-store-backend-${VERSION}.tar.gz
+  only:
+    changes:
+      - backend/*
+  needs:
+    - build_code
+
+
 build_image:
   when: manual
   stage: build
@@ -83,5 +108,5 @@ security_scan:
       $CI_REGISTRY_IMAGE/momo-store-backend:${VERSION} > backend-scan-report.txt
   artifacts:
     expire_in: 1 hour
-    reports:
-      container_scanning: backend-scan-report.txt
+    paths:
+      - backend/backend-scan-report.txt

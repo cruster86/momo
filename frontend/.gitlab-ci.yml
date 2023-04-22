@@ -1,5 +1,6 @@
 stages:
   - test
+  - upload
   - build
   - scan
 
@@ -23,6 +24,31 @@ sonarqube-sast:
       -Dsonar.sources=.
       -Dsonar.host.url=${SONARQUBE_URL}
       -Dsonar.login=${SONAR_LOGIN_FRONT}
+
+build_code:
+  image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/node:16.20.0-alpine3.17
+  stage: upload
+  script:
+    - cd frontend
+    - npm install --progress=false
+    - npm run build
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - frontend/dist
+
+upload-to-nexus:
+  stage: upload
+  script:
+    - cd frontend
+    - tar czf momo-store-frontend-${VERSION}.tar.gz dist
+    - >       
+      curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-store-frontend-${VERSION}.tar.gz ${NEXUS_REPO_FRONT_URL}/momo-store-frontend/${VERSION}/momo-store-frontend-${VERSION}.tar.gz
+  only:
+    changes:
+      - frontend/*
+  needs:
+    - build_code
 
 build_image:
   when: manual
@@ -53,5 +79,5 @@ security_scan:
       $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION} > frontend-scan-report.txt
   artifacts:
     expire_in: 1 hour
-    reports:
-      container_scanning: frontend-scan-report.txt
+    paths:
+      - backend/frontend-scan-report.txt
