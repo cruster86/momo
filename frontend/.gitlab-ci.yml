@@ -10,18 +10,6 @@ include:
 variables:
   VERSION: 1.0.${CI_PIPELINE_ID}
 
-#build_for_test:
-#  image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/node:16.20.0-alpine3.17
-#  stage: test
-#  script:
-#    - cd frontend
-#    - npm install --progress=false
-#    - npm run build
-#  artifacts:
-#    expire_in: 1 hour
-#    paths:
-#      - frontend/dist
-
 sonarqube-sast:
   stage: test
   image:
@@ -61,8 +49,8 @@ security_scan:
     - until docker info; do sleep 1; done
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker run --rm aquasec/trivy image
-      --scanners vuln --severity HIGH,CRITICAL --output backend-scan-report.txt --no-progress
+    - docker run --rm -e TRIVY_USERNAME=$CI_REGISTRY_USER -e TRIVY_PASSWORD=$CI_REGISTRY_PASSWORD aquasec/trivy
+      image --scanners vuln --severity HIGH,CRITICAL --output backend-scan-report.txt --no-progress
       $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION}
   artifacts:
     expire_in: 1 hour

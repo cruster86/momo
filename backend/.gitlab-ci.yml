@@ -1,9 +1,7 @@
 stages:
 #  - lint
-#  - test
-#  - check
+  - test
   - build
-  - scan
 
 include:
   - project: 'templates/ci'
@@ -72,6 +70,20 @@ variables:
 #    - cd backend
 #    - sonar-scanner
 
+sonarqube-sast:
+  stage: test
+  image:
+    name: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/sonar-scanner-cli:latest
+    entrypoint: [""]
+  script:
+    - cd backend
+    - >
+      sonar-scanner
+      -Dsonar.projectKey=${SONAR_PROJECT_KEY_FRONT}
+      -Dsonar.sources=.
+      -Dsonar.host.url=${SONARQUBE_URL}
+      -Dsonar.login=${SONAR_LOGIN_FRONT}
+
 build_image:
   when: manual
   stage: build
@@ -84,22 +96,3 @@ build_image:
     - cd backend
     - docker build -t $CI_REGISTRY_IMAGE/momo-store-backend:${VERSION} .
     - docker push $CI_REGISTRY_IMAGE/momo-store-backend:${VERSION}
-
-security_scan:
-  needs: 
-    - job: build-image
-  stage: scan
-  image: 
-    name: aquasec/trivy:latest
-    entrypoint: [""]
-  services:
-    - docker:dind
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - trivy --quiet image --no-progress --severity HIGH,CRITICAL --scanners vuln --output backend-scan-report.txt
-      $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION}
-  artifacts:
-    expire_in: 1 hour
-    reports:
-      container_scanning: backend-scan-report.txt
