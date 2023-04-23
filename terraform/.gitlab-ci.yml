@@ -21,11 +21,12 @@ stages:
 
 .cluster-deploy:
   script:
+    - set -x
     - cd terraform
-    - terraform/scripts/prepare.sh
+    - scripts/prepare.sh
     - terraform init -backend-config=backend.conf
     - terraform validate && terraform plan
-    - terraform/scripts/deploy.sh apply -auto-approve
+    - scripts/deploy.sh apply -auto-approve
     - terraform apply -refresh-only -auto-approve
     - terraform state list
 
