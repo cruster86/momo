@@ -19,8 +19,11 @@ kubectl get ns test || kubectl create ns test
 helm upgrade --install ahoy --namespace test examples/hello-world --debug --atomic --wait
 
 # kubectl get ns momo-store || kubectl create ns momo-store
+
 # echo "${NEXUS_REPO_PASS}" | helm repo add nexus https://nexus.k8s.praktikum-services.tech/repository/momo-store-vladislav-lesnik-helm/ --username ${NEXUS_REPO_USER} --password-stdin
+
 # helm repo update nexus
+
 #helm upgrade --install momo-store nexus/momo-store -n momo-store \
 #  --set global.tag="${TAG}" \
 #  --debug --atomic --wait \
