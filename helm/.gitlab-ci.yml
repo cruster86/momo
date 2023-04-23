@@ -1,0 +1,28 @@
+stages:
+  - upload
+
+image: alpine:3.17.3
+
+variables:
+  DOCKER_TAG: latest
+  CHART_VERSION: 0.1.6
+
+helm upload:
+  stage: upload
+  when: manual
+  before_script:
+    - export DOCKER_TAG=${DOCKER_TAG}
+    - export CHART_VERSION=${CHART_VERSION}
+    - apk update && apk add wget curl
+    - |
+      cd ~
+      wget -q https://get.helm.sh/helm-v3.11.0-linux-amd64.tar.gz
+      tar xzf helm-v3.11.0-linux-amd64.tar.gz
+      chmod +x linux-amd64/helm
+      mv linux-amd64/helm /usr/local/bin
+      helm version
+  script:
+    - cd helm
+    - helm package momo-store/
+    - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
+      --upload-file momo-store-"${CHART_VERSION}".tgz
