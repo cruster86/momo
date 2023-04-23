@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -x
+
 yc config set token ${YC_TOKEN} &&\
 yc config set cloud-id b1gq442484mq45tns89c &&\
 yc config set folder-id b1ggq6pgr3l3rc0t76s1

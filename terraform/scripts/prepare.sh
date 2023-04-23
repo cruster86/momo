@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -x
+
 ## Create CLI configuration file
 
 cat << EOF > ~/.terraformrc
