@@ -30,6 +30,10 @@ stages:
     - terraform apply -refresh-only -auto-approve
     - terraform state list
 
+.app-deploy:
+  after_script:
+    - scripts/helm.sh
+
 .cluster-destroy:
   script:
     - set -x
@@ -46,6 +50,7 @@ create cluster:
   extends:
     - .prepare_env
     - .cluster-deploy
+    - .app-deploy
 
 destroy cluster:
   stage: destroy

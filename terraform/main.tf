@@ -27,7 +27,7 @@ resource "yandex_iam_service_account" "myaccount" {
 }
 
 resource "yandex_resourcemanager_folder_iam_member" "k8s-admin" {
-  # The service account is assigned the k8s.clusters.agent role.
+  # The service account is assigned the k8s.clusters.admin role.
   folder_id = local.folder_id
   role      = "k8s.admin"
   member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
@@ -69,14 +69,19 @@ resource "yandex_kms_symmetric_key" "kms-key" {
 }
 
 resource "yandex_kubernetes_cluster" "k8s-corpsehead" {
+  name       = "k8s-corpsehead"
   network_id = yandex_vpc_network.mynet.id
   master {
-    version = local.k8s_version
+    public_ip = true
+    version   = local.k8s_version
     zonal {
       zone      = yandex_vpc_subnet.mysubnet.zone
       subnet_id = yandex_vpc_subnet.mysubnet.id
     }
-    security_group_ids = [yandex_vpc_security_group.k8s-public-services.id]
+    security_group_ids = [
+      yandex_vpc_security_group.k8s-public-services.id,
+      yandex_vpc_security_group.k8s-master-whitelist.id
+    ]
   }
   service_account_id      = yandex_iam_service_account.myaccount.id
   node_service_account_id = yandex_iam_service_account.myaccount.id
@@ -100,6 +105,26 @@ resource "yandex_vpc_subnet" "mysubnet" {
   v4_cidr_blocks = ["10.1.0.0/16"]
   zone           = "ru-central1-a"
   network_id     = yandex_vpc_network.mynet.id
+}
+
+resource "yandex_vpc_security_group" "k8s-master-whitelist" {
+  name        = "k8s-master-whitelist"
+  description = "Group rules allow access to the Kubernetes API from the internet. Apply the rules to the cluster only."
+  network_id  = yandex_vpc_network.mynet.id
+
+  ingress {
+    protocol       = "TCP"
+    description    = "Rule allows connections to the Kubernetes API via port 6443 from a specified network."
+    v4_cidr_blocks = ["0.0.0.0/0"]
+    port           = 6443
+  }
+
+  ingress {
+    protocol       = "TCP"
+    description    = "Rule allows connections to the Kubernetes API via port 443 from a specified network."
+    v4_cidr_blocks = ["0.0.0.0/0"]
+    port           = 443
+  }
 }
 
 resource "yandex_vpc_security_group" "k8s-public-services" {
@@ -160,7 +185,8 @@ resource "yandex_kubernetes_node_group" "momo-group" {
       nat        = true
       subnet_ids = ["${yandex_vpc_subnet.mysubnet.id}"]
       security_group_ids = [
-        yandex_vpc_security_group.k8s-public-services.id
+        yandex_vpc_security_group.k8s-public-services.id,
+        yandex_vpc_security_group.k8s-master-whitelist.id
       ]
     }
 
