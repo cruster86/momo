@@ -8,6 +8,7 @@ stages:
 
 .prepare_env:
   before_script:
+    - set -x
     - export "S3_KEY_ID=${S3_KEY_ID}"
     - export "S3_SECRET=${S3_SECRET}"
     - export "SSH_PUB_KEY=${SSH_PUB_KEY}"
