@@ -19,7 +19,7 @@ kubectl get ns test || kubectl create ns test
 helm upgrade --install ahoy --namespace test examples/hello-world --debug --atomic --wait
 
 # kubectl get ns momo-store || kubectl create ns momo-store
-# helm repo add nexus https://nexus.praktikum-services.ru/repository/momo-store-vladislav-lesnik-helm --username zerodistance
+# helm repo add nexus https://nexus.k8s.praktikum-services.tech/repository/momo-store-vladislav-lesnik-helm --username zerodistance
 # helm repo update nexus
 #helm upgrade --install momo-store nexus/momo-store -n momo-store \
 #  --set global.tag="${TAG}" \
