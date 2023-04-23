@@ -16,12 +16,13 @@ stages:
     - mkdir ~/.ssh
     - cp $SSH_PRIV_KEY ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
-    - chmod -R +x terraform/scripts/*
-    - terraform/scripts/env.sh
+    - chmod -R +x scripts/* terraform/scripts/*
+    - scripts/env.sh
 
 .cluster-deploy:
   script:
     - cd terraform
+    - terraform/scripts/prepare.sh
     - terraform init -backend-config=backend.conf
     - terraform validate && terraform plan
     - terraform/scripts/deploy.sh apply -auto-approve
