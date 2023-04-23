@@ -1,1 +1,26 @@
+environment: production 
+
+replicaCount: 1
+revisionHistoryLimit: 5
+image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/momo-store-backend
+
+imagePullPolicy: IfNotPresent
+
+imagePullSecrets:
+  - name: docker-registry
+
+annotations:
+  prometheus.io/port: '8081'
+  prometheus.io/scrape: 'true'
+
+updateStrategy:
+  rollingUpdate:
+    maxSurge: 25%
+    maxUnavailable: 25%
+  type: RollingUpdate 
+
+service:
+  type: ClusterIP
+  port: 8081
+  targetPort: 8081
 

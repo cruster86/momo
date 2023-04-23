@@ -1,0 +1,36 @@
+environment: production 
+
+replicaCount: 1
+revisionHistoryLimit: 5
+image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/momo-store-frontend
+
+imagePullPolicy: IfNotPresent
+
+imagePullSecrets:
+  - name: docker-registry
+
+updateStrategy:
+  rollingUpdate:
+    maxSurge: 25%
+    maxUnavailable: 25%
+  type: RollingUpdate
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+  initialDelaySeconds: 15
+  periodSeconds: 30
+  timeoutSeconds: 1
+  failureThreshold: 6
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+ingress:
+  enabled: true
+  className: nginx
+  fqdn: lesnik-vladislav-07.k8s.praktikum-services.tech
+

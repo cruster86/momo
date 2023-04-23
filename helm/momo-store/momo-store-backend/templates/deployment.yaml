@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-backend
+  labels:
+    {{- include "backend.labels" . | nindent 4 }}
+    env: "{{ .Values.environment }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  strategy:
+{{ toYaml .Values.updateStrategy | indent 4 }}
+  selector:
+    matchLabels:
+      {{- include "backend.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+{{ toYaml .Values.annotations | indent 8 }}
+      labels:
+        {{- include "backend.selectorLabels" . | nindent 8 }}
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - {{ .Chart.Name }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.image }}:{{ .Values.global.tag }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          ports:
+            - name: {{ .Chart.Name }}
+              containerPort: 8081
+          livenessProbe:
+{{ toYaml .Values.livenessProbe | indent 12 }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
