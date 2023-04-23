@@ -1,6 +1,6 @@
 #!/bin/sh
 
-apk update && apk add --no-cache nano curl wget unzip bash openssh-client
+apk update && apk add --no-cache nano curl wget unzip bash jq openssh-client
 
 wget https://hashicorp-releases.yandexcloud.net/terraform/1.4.0/terraform_1.4.0_linux_amd64.zip &&\
   unzip terraform_1.4.0_linux_amd64.zip &&\
