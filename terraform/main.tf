@@ -12,6 +12,7 @@ terraform {
       source = "yandex-cloud/yandex"
     }
   }
+  backend "s3" {}
 }
 
 provider "yandex" {
@@ -29,6 +30,13 @@ resource "yandex_resourcemanager_folder_iam_member" "k8s-admin" {
   # The service account is assigned the k8s.clusters.agent role.
   folder_id = local.folder_id
   role      = "k8s.admin"
+  member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
+}
+
+resource "yandex_resourcemanager_folder_iam_member" "storage-editor" {
+  # The service account is assigned the storage.editor role.
+  folder_id = local.folder_id
+  role      = "storage.editor"
   member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
 }
 
@@ -74,6 +82,7 @@ resource "yandex_kubernetes_cluster" "k8s-corpsehead" {
   node_service_account_id = yandex_iam_service_account.myaccount.id
   depends_on = [
     yandex_resourcemanager_folder_iam_member.k8s-admin,
+    yandex_resourcemanager_folder_iam_member.storage-editor,
     yandex_resourcemanager_folder_iam_member.k8s-clusters-agent,
     yandex_resourcemanager_folder_iam_member.vpc-public-admin,
     yandex_resourcemanager_folder_iam_member.images-puller
