@@ -16,7 +16,7 @@ stages:
     - cp $SSH_PRIV_KEY ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - chmod -R +x terraform/scripts/*
-    - terraform/scripts/prepare_env.sh
+    - terraform/scripts/env.sh
 
 .cluster-deploy:
   script:
