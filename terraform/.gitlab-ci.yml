@@ -57,7 +57,6 @@ create cluster:
   extends:
     - .prepare_env
     - .cluster-create
-    - .app-deploy
 
 deploy app:
   stage: deploy
