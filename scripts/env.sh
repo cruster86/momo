@@ -1,5 +1,9 @@
 #!/bin/sh
 
+set -x
+
+cd ~
+
 apk update && apk add --no-cache \
   curl git wget unzip bash jq openssh-client
 
@@ -15,6 +19,6 @@ curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash &&\
 mv /root/yandex-cloud/bin/yc /usr/local/bin
 
 wget -q https://get.helm.sh/helm-v3.11.0-linux-amd64.tar.gz &&\
-  tar xzvf helm-v3.11.0-linux-amd64.tar.gz &&\
+  tar xzf helm-v3.11.0-linux-amd64.tar.gz &&\
   chmod +x linux-amd64/helm &&\
   mv linux-amd64/helm /usr/local/bin
