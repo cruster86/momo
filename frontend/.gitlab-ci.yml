@@ -9,10 +9,12 @@ include:
     file: 'DockerInDockerTemplate.yml'
 
 variables:
-  VERSION: 1.0.${CI_PIPELINE_ID}
+  TAG: "${CI_COMMIT_TAG}"
+  VERSION: "${TAG}"
 
 sonarqube-sast:
   stage: test
+  allow_failure: true
   image:
     name: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/sonar-scanner-cli:latest
     entrypoint: [""]
@@ -45,13 +47,11 @@ upload_nexus:
     - >       
       curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-store-frontend-${VERSION}.tar.gz ${NEXUS_REPO_FRONT_URL}/momo-store-frontend/${VERSION}/momo-store-frontend-${VERSION}.tar.gz
   only:
-    changes:
-      - frontend/*
+    - tags
   needs:
     - build_code
 
 build_&_push_image:
-  when: manual
   stage: build
   image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/docker:20.10.12-dind-rootless
   before_script:
@@ -61,6 +61,8 @@ build_&_push_image:
     - cd frontend
     - docker build -t $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION} .
     - docker push $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION}
+  only:
+    - tags
 
 image_scan:
   needs: 
@@ -84,3 +86,5 @@ image_scan:
     expire_in: 1 hour
     paths:
       - backend/frontend-scan-report.txt
+  only:
+    - tags

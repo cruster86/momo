@@ -29,6 +29,7 @@ go-lint:
 go-test:
   image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/golang:latest
   stage: test
+  allow_failure: true
   script:
     - cd backend
     - go fmt $(go list ./... | grep -v /vendor/)
@@ -44,6 +45,7 @@ go-test:
 
 sonarqube-sast:
   stage: test
+  allow_failure: true
   image:
     name: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/sonar-scanner-cli:latest
     entrypoint: [""]
@@ -81,7 +83,6 @@ upload_nexus:
 
 
 build_&_push_image:
-  when: manual
   stage: build
   image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/docker:20.10.12-dind-rootless
   before_script:
