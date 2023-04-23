@@ -36,6 +36,7 @@ stages:
 
 .app-deploy:
   after_script:
+    - cd terraform
     - scripts/helm.sh
 
 .cluster-destroy:
