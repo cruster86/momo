@@ -12,6 +12,8 @@ kubectl cluster-info && kubectl get nodes
 
 helm repo add examples https://helm.github.io/examples
 
+helm repo list
+
 kubectl get ns test || kubectl create ns test
 
-helm upgrade --install ahoy --namespace test examples/hello-world --debug --atomic
+helm upgrade --install ahoy --namespace test examples/hello-world --debug --atomic --wait
