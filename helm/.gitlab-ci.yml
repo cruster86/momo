@@ -4,14 +4,16 @@ stages:
 image: alpine:3.17.3
 
 variables:
-  DOCKER_TAG: latest
-  CHART_VERSION: 0.1.6
+  FRONT_TAG: 1.0.1
+  BACK_TAG: 1.0.1
+  CHART_VERSION: 1.0.1
 
 helm upload:
   stage: upload
   when: manual
   before_script:
-    - export DOCKER_TAG=${DOCKER_TAG}
+    - export FRONT_TAG_TAG=${FRONT_TAG}
+    - export BACK_TAG_TAG=${BACK_TAG}
     - export CHART_VERSION=${CHART_VERSION}
     - apk update && apk add wget curl
     - |
