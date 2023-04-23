@@ -76,8 +76,6 @@ upload_nexus:
       curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-store-backend-${VERSION}.tar.gz ${NEXUS_REPO_BACK_URL}/momo-store-backend/${VERSION}/momo-store-backend-${VERSION}.tar.gz
   only:
     - tags
-    changes:
-      - backend/*
   needs:
     - build_code
 
