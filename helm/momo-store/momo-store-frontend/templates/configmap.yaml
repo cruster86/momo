@@ -7,7 +7,7 @@ data:
     server {
         listen       80;
         server_name  localhost;
-    
+        
         location / {
             root   /usr/share/nginx/html;
             index  index.html index.htm;
@@ -15,7 +15,7 @@ data:
         }
     
         location ~ ^/(?:products|categories|orders|metrics|auth/whoami) {
-            proxy_pass http://172.17.0.1:8081;
+            proxy_pass http://{{ .Values.global.backServiceName }}:{{ .Values.global.backServicePort }};
         }
     
         error_page   500 502 503 504  /50x.html;

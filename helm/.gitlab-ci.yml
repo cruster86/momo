@@ -6,22 +6,18 @@ image: alpine:3.17.3
 variables:
   TAG: "${CI_COMMIT_TAG}"
   VERSION: "${TAG}"
-  CHART_VERSION: 1.0.0
+  CHART_VERSION: "${TAG}"
 
 helm upload:
   stage: upload
   when: manual
   before_script:
-    - apk update && apk add wget curl
-    - |
-      cd ~
-      wget -q https://get.helm.sh/helm-v3.11.0-linux-amd64.tar.gz
-      tar xzf helm-v3.11.0-linux-amd64.tar.gz
-      chmod +x linux-amd64/helm
-      mv linux-amd64/helm /usr/local/bin
-      helm version
+    - set -x
+    - chmod -R +x scripts/*
+    - scripts/prepare.sh
   script:
     - cd helm
+    - helm version
     - helm package momo-store/
     - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
       --upload-file momo-store-"${CHART_VERSION}".tgz

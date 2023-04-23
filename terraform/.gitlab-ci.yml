@@ -5,6 +5,10 @@ stages:
   - deploy
   - destroy
 
+variables:
+  TAG: "${CI_COMMIT_TAG}"
+  VERSION: "${TAG}"
+
 ######  common configs  ######
 
 .prepare_env:
@@ -14,6 +18,7 @@ stages:
     - export "S3_SECRET=${S3_SECRET}"
     - export "SSH_PUB_KEY=${SSH_PUB_KEY}"
     - export "YC_TOKEN=${YC_TOKEN}"
+    - export TAG="${TAG}"
     - mkdir ~/.ssh
     - cp $SSH_PRIV_KEY ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
