@@ -2,6 +2,7 @@ image: alpine:3.17.3
 
 stages:
   - create
+  - deploy
   - destroy
 
 ######  common configs  ######
@@ -19,14 +20,14 @@ stages:
     - chmod -R +x scripts/* terraform/scripts/*
     - scripts/env.sh
 
-.cluster-deploy:
+.cluster-create:
   script:
     - set -x
     - cd terraform
     - scripts/prepare.sh
     - terraform init -backend-config=backend.conf
     - terraform validate && terraform plan
-    - scripts/deploy.sh apply -auto-approve
+    - scripts/create.sh apply -auto-approve
     - terraform apply -refresh-only -auto-approve
     - terraform state list
   artifacts:
@@ -35,9 +36,9 @@ stages:
       - terraform/terraform.log 
 
 .app-deploy:
-  after_script:
+  script:
     - cd terraform
-    - scripts/helm.sh
+    - scripts/deploy.sh
 
 .cluster-destroy:
   script:
@@ -55,8 +56,17 @@ create cluster:
   when: manual
   extends:
     - .prepare_env
-    - .cluster-deploy
+    - .cluster-create
     - .app-deploy
+
+deploy app:
+  stage: deploy
+  when: manual
+  extends:
+    - .prepare_env
+    - .app-deploy
+#  only:
+#    - tags
 
 destroy cluster:
   stage: destroy
