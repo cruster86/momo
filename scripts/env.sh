@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -x
+
 apk update && apk add --no-cache \
   curl git wget unzip bash jq openssh-client
 
