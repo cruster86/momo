@@ -1,0 +1,50 @@
+image: alpine:3.17.3
+
+stages:
+  - create
+  - destroy
+
+######  common configs  ######
+
+.prepare_env:
+  before_script:
+    - export "S3_KEY_ID=${S3_KEY_ID}"
+    - export "S3_SECRET=${S3_SECRET}"
+    - export "SSH_PUB_KEY=${SSH_PUB_KEY}"
+    - export "YC_TOKEN=${YC_TOKEN}"
+    - mkdir ~/.ssh
+    - cp $SSH_PRIV_KEY ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - chmod -R +x terraform/scripts/*
+    - terraform/scripts/prepare_env.sh
+
+.cluster-deploy:
+  script:
+    - cd terraform
+    - terraform init -backend-config=backend.conf
+    - terraform validate && terraform plan
+    - terraform/scripts/deploy.sh apply -auto-approve
+    - terraform apply -refresh-only -auto-approve
+    - terraform state list
+
+.cluster-destroy:
+  script:
+    - cd terraform
+    - terraform init -backend-config=backend.conf
+    - terraform validate && terraform destroy -auto-approve
+
+######  main jobs  ######
+
+create cluster:
+  stage: create
+  when: manual
+  extends:
+    - .prepare_env
+    - .cluster-deploy
+
+destroy cluster:
+  stage: destroy
+  when: manual
+  extends:
+    - .prepare_env
+    - .cluster-destroy

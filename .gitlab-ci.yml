@@ -20,3 +20,13 @@ frontend:
   only:
     changes:
       - frontend/**/*
+
+terraform:
+  stage: module-pipelines
+  trigger:
+    include:
+      - "/terraform/.gitlab-ci.yml"
+    strategy: depend
+  only:
+    changes:
+      - terraform/**/*
