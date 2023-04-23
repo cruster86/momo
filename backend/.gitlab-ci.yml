@@ -116,3 +116,5 @@ image_scan:
     expire_in: 1 hour
     paths:
       - backend/backend-scan-report.txt
+  only:
+    - tags
