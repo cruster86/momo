@@ -32,7 +32,9 @@ stages:
 
 .cluster-destroy:
   script:
+    - set -x
     - cd terraform
+    - scripts/prepare.sh
     - terraform init -backend-config=backend.conf
     - terraform validate && terraform destroy -auto-approve
 
