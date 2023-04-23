@@ -29,6 +29,10 @@ stages:
     - scripts/deploy.sh apply -auto-approve
     - terraform apply -refresh-only -auto-approve
     - terraform state list
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - terraform/terraform.log 
 
 .app-deploy:
   after_script:
