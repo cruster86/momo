@@ -15,6 +15,21 @@ module "cluster_service_accounts" {
 }
 
 
+##############    Create VPC Networks    ##############
+
+module "vpc_networks" {
+  source         = "./modules/vpc_networks"
+}
+
+
+##############    Create Security Groups    ##############
+
+module "cluster_security_groups" {
+  source         = "./modules/cluster_security_groups"
+  depends_on = [module.vpc_networks]
+}
+
+
 ##############    Create Kubernetes Cluster    ##############
 
 module "cluster_kubernetes" {
@@ -34,20 +49,13 @@ module "dns_zone_records" {
 }
 
 
-##############    Create Security Groups    ##############
-
-module "cluster_security_groups" {
-  source         = "./modules/cluster_security_groups"
-  depends_on = [module.cluster_kubernetes]
-}
-
-
 ##############    Create Cluster Node Group    ##############
 
 module "cluster_node_group" {
   source         = "./modules/cluster_node_group"
   depends_on = [
     module.cluster_kubernetes,
+    module.vpc_networks
     module.cluster_security_groups
   ]
 }
