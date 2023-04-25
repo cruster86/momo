@@ -63,7 +63,7 @@ module "cluster_kubernetes" {
 module "dns_zone_records" {
   source         = "./modules/dns_zone_records"
   depends_on = [module.cluster_kubernetes]
-  data = [module.cluster_kubernetes.k8s-corpsehead..master.0.external_v4_address]
+  data = [module.cluster_kubernetes.k8s-corpsehead.master.0.external_v4_address]
 }
 
 
