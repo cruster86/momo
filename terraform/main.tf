@@ -18,7 +18,7 @@ module "cluster_service_accounts" {
 
 ##############    Create Kubernetes Cluster    ##############
 
-module "cluster_node_group" {
+module "cluster_kubernetes" {
   source         = "./modules/cluster_kubernetes"
   depends_on = [
     module.cluster_security_groups,
