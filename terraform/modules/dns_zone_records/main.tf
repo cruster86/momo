@@ -25,5 +25,5 @@ resource "yandex_dns_recordset" "rs1" {
   name    = "momo-store.corpsehead.space."
   type    = "A"
   ttl     = 300
-  data    = var.data
+  data    = [var.data]
 }
