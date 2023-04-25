@@ -249,3 +249,9 @@ resource "yandex_kubernetes_node_group" "momo-group" {
     auto_repair  = false
   }
 }
+
+##############    Create Network Load Balancer    ##############
+
+resource "yandex_lb_network_load_balancer" "load-balancer" {
+  name = "load-balancer"
+}
