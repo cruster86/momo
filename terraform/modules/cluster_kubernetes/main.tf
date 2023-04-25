@@ -10,29 +10,20 @@ terraform {
 
 resource "yandex_kubernetes_cluster" "k8s-corpsehead" {
   name       = "k8s-corpsehead"
-  network_id = yandex_vpc_network.mynet.id
+  network_id = var.network_id
   master {
     public_ip = var.k8s_public_ip
     version   = var.k8s_version
     zonal {
-      zone      = yandex_vpc_subnet.mysubnet.zone
-      subnet_id = yandex_vpc_subnet.mysubnet.id
+      zone      = var.zone
+      subnet_id = var.subnet_id
     }
-    security_group_ids = [
-      yandex_vpc_security_group.k8s-public-services.id,
-      yandex_vpc_security_group.k8s-master-whitelist.id
-    ]
+    security_group_ids = var.security_group_ids
   }
-  service_account_id      = yandex_iam_service_account.myaccount.id
-  node_service_account_id = yandex_iam_service_account.myaccount.id
-  depends_on = [
-    yandex_resourcemanager_folder_iam_member.k8s-admin,
-    yandex_resourcemanager_folder_iam_member.storage-editor,
-    yandex_resourcemanager_folder_iam_member.k8s-clusters-agent,
-    yandex_resourcemanager_folder_iam_member.vpc-public-admin,
-    yandex_resourcemanager_folder_iam_member.images-puller
-  ]
+  service_account_id      = var.service_account_id 
+  node_service_account_id = var.service_account_id
+  depends_on = var.depends
   kms_provider {
-    key_id = yandex_kms_symmetric_key.kms-key.id
+    key_id = var.key_id
   }
 }

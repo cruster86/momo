@@ -9,7 +9,7 @@ terraform {
 ##############    Create Cluster Node Group    ##############
 
 resource "yandex_kubernetes_node_group" "momo-group" {
-  cluster_id  = yandex_kubernetes_cluster.k8s-corpsehead.id
+  cluster_id  = var.cluster_id
   name        = "momo-group"
   description = "momo-group"
   version     = "1.22"
@@ -23,11 +23,8 @@ resource "yandex_kubernetes_node_group" "momo-group" {
 
     network_interface {
       nat        = true
-      subnet_ids = ["${yandex_vpc_subnet.mysubnet.id}"]
-      security_group_ids = [
-        yandex_vpc_security_group.k8s-public-services.id,
-        yandex_vpc_security_group.k8s-master-whitelist.id
-      ]
+      subnet_ids = var.subnet_ids
+      security_group_ids = var.security_group_ids
     }
 
     resources {
