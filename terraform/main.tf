@@ -15,11 +15,11 @@ terraform {
   backend "s3" {}
 }
 
-provider "yandex" {
-  folder_id = local.folder_id
-  token     = local.token
-  cloud_id  = local.cloud_id
-}
+#provider "yandex" {
+#  folder_id = local.folder_id
+#  token     = local.token
+#  cloud_id  = local.cloud_id
+#}
 
 resource "yandex_iam_service_account" "myaccount" {
   name        = local.sa_name
@@ -213,7 +213,7 @@ resource "yandex_kubernetes_node_group" "momo-group" {
     resources {
       memory        = 2
       cores         = 2
-      core_fraction = 50
+      core_fraction = 20
     }
 
     boot_disk {
