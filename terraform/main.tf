@@ -47,7 +47,7 @@ module "cluster_kubernetes" {
   zone      = module.vpc_networks.mysubnet.zone
   subnet_id = module.vpc_networks.mysubnet.id
   key_id = module.cluster_service_accounts.kms-key.id
-  service_account_id = module.cluster_service_accounts.myaccount.id
+#  service_account_id = module.cluster_service_accounts.myaccount.id
   depends = [
     module.cluster_service_accounts.k8s-admin,
     module.cluster_service_accounts.storage-editor,
