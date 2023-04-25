@@ -1,0 +1,3 @@
+variable "data" {
+  type    = string
+}
