@@ -37,7 +37,7 @@ cat << EOF > backend.conf
 endpoint   = "storage.yandexcloud.net"
 bucket     = "momo-store-tfstate"
 region     = "ru-central1"
-key        = "momo-store.terraform.tfstate"
+key        = "momo-store-k8s.terraform.tfstate"
 access_key = "${S3_KEY_ID}"
 secret_key = "${S3_SECRET}"
 skip_region_validation      = true
