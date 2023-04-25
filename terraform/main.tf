@@ -130,11 +130,11 @@ resource "yandex_dns_recordset" "rs1" {
 ##############    Create Security Groups    ##############
 
 module "cluster_security_groups" {
-  source         = "terraform/modules/cluster_security_groups"
+  source         = "./terraform/modules/cluster_security_groups"
 }
 
 ##############    Create Cluster Node Group    ##############
 
 module "cluster_node_group" {
-  source         = "terraform/modules/cluster_node_group"
+  source         = "./terraform/modules/cluster_node_group"
 }
