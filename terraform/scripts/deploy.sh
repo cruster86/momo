@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -x
 
@@ -30,11 +30,11 @@ helm upgrade --install ahoy --namespace test examples/hello-world --debug --atom
 #  --set global.backServiceName=momo-store-backend --set global.backServicePort=8081
 
 kubectl apply -f - <<END
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hello
+  namespace: hello
 spec:
   replicas: 2
   selector:
@@ -53,6 +53,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: hello
+  namespace: hello
 spec:
   ports:
   # Порт сетевого балансировщика, на котором будут обслуживаться пользовательские запросы.
