@@ -1,8 +1,3 @@
-locals {
-  k8s_version = "1.22"
-  sa_name     = "k8s-admin"
-}
-
 terraform {
   required_providers {
     yandex = {
@@ -12,17 +7,23 @@ terraform {
   backend "s3" {}
 }
 
+##############    Create KMS Key    ##############
+
 resource "yandex_kms_symmetric_key" "kms-key" {
   # A key for encrypting critical information, including passwords, OAuth tokens, and SSH keys.
-  name              = "kms-key"
-  default_algorithm = "AES_128"
-  rotation_period   = "8760h" # 1 year.
+  name              = var.kms_name
+  default_algorithm = var.kms_algorithm
+  rotation_period   = var.kms_period
 }
+
+##############    Create IAM Service Account    ##############
 
 resource "yandex_iam_service_account" "myaccount" {
   name        = var.sa_name
   description = "K8S service account"
 }
+
+##############    Create Service Account Roles    ##############
 
 resource "yandex_resourcemanager_folder_iam_member" "k8s-admin" {
   # The service account is assigned the k8s.clusters.admin role.
@@ -59,6 +60,8 @@ resource "yandex_resourcemanager_folder_iam_member" "images-puller" {
   member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
 }
 
+##############    Create Kubernetes Cluster    ##############
+
 resource "yandex_kubernetes_cluster" "k8s-corpsehead" {
   name       = "k8s-corpsehead"
   network_id = yandex_vpc_network.mynet.id
@@ -88,9 +91,21 @@ resource "yandex_kubernetes_cluster" "k8s-corpsehead" {
   }
 }
 
+##############    Create VPC Network    ##############
+
 resource "yandex_vpc_network" "mynet" {
   name = "mynet"
 }
+
+##############    Create VPC Subnet    ##############
+
+resource "yandex_vpc_subnet" "mysubnet" {
+  v4_cidr_blocks = ["10.1.0.0/16"]
+  zone           = "ru-central1-a"
+  network_id     = yandex_vpc_network.mynet.id
+}
+
+##############    Create DNS Zone & Records    ##############
 
 resource "yandex_dns_zone" "my-zone" {
   name        = "my-public-zone"
@@ -112,11 +127,7 @@ resource "yandex_dns_recordset" "rs1" {
   data    = ["${yandex_kubernetes_cluster.k8s-corpsehead.master.0.external_v4_address}"]
 }
 
-resource "yandex_vpc_subnet" "mysubnet" {
-  v4_cidr_blocks = ["10.1.0.0/16"]
-  zone           = "ru-central1-a"
-  network_id     = yandex_vpc_network.mynet.id
-}
+##############    Create Security Groups    ##############
 
 resource "yandex_vpc_security_group" "k8s-master-whitelist" {
   name        = "k8s-master-whitelist"
@@ -177,7 +188,7 @@ resource "yandex_vpc_security_group" "k8s-public-services" {
   }
 }
 
-############   Create cluster node group ############
+##############    Create Cluster Node Group    ##############
 
 resource "yandex_kubernetes_node_group" "momo-group" {
   cluster_id  = yandex_kubernetes_cluster.k8s-corpsehead.id

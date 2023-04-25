@@ -24,20 +24,21 @@ variable "sa_name" {
 
 ##############    KMS Key Settings    ##############
 
-#variable "kms_name" {
-#  type    = string
-#  default = "kms-key"
-#}
+variable "kms_name" {
+  type    = string
+  default = "kms-key"
+}
 
-#variable "kms_algorithm" {
-#  type    = string
-#  default = "AES_128"
-#}
+variable "kms_algorithm" {
+  type    = string
+  default = "AES_128"
+}
 
-#variable "kms_period" {
-#  type    = string
-#  default = "8760h"
-#}
+variable "kms_period" {
+  description =  "1 year"
+  type    = string
+  default = "8760h"
+}
 
 ##############    Kubernetes Cluster Settings    ##############
 
