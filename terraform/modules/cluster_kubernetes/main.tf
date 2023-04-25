@@ -18,7 +18,7 @@ resource "yandex_kubernetes_cluster" "k8s-corpsehead" {
       zone      = var.zone
       subnet_id = var.subnet_id
     }
-    security_group_ids = var.security_group_ids
+    security_group_ids = [var.security_group_ids]
   }
   service_account_id      = var.service_account_id 
   node_service_account_id = var.service_account_id
