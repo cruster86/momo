@@ -12,7 +12,6 @@ terraform {
 
 module "cluster_service_accounts" {
   source         = "./modules/cluster_service_accounts"
-  depends_on = [module.cluster_kubernetes]
 }
 
 
