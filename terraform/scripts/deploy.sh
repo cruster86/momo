@@ -28,3 +28,40 @@ helm upgrade --install ahoy --namespace test examples/hello-world --debug --atom
 #  --set global.tag="${TAG}" \
 #  --debug --atomic --wait \
 #  --set global.backServiceName=momo-store-backend --set global.backServicePort=8081
+
+kubectl apply -f - <<END
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+    spec:
+      containers:
+      - name: hello-app
+        image: cr.yandex/crpjd37scfv653nl11i9/hello:1.1
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello
+spec:
+  ports:
+  # Порт сетевого балансировщика, на котором будут обслуживаться пользовательские запросы.
+  - port: 80
+    name: plaintext
+    # Порт контейнера, на котором доступно приложение.
+    targetPort: 8080
+  # Метки селектора, использованные в шаблоне подов при создании объекта Deployment.
+  selector:
+    app: hello
+  type: LoadBalancer
+END
