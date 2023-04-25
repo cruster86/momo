@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    yandex = {
+      source = "yandex-cloud/yandex"
+    }
+  }
+}
+
 ##############    Create VPC Network    ##############
 
 resource "yandex_vpc_network" "mynet" {
