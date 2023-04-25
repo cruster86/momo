@@ -19,7 +19,6 @@ module "vpc_networks" {
 
 module "cluster_service_accounts" {
   source         = "./modules/cluster_service_accounts"
-  network_id = yandex_vpc_network.mynet.id
 }
 
 
@@ -28,6 +27,7 @@ module "cluster_service_accounts" {
 module "cluster_security_groups" {
   source         = "./modules/cluster_security_groups"
   depends_on = [module.vpc_networks]
+  network_id = module.vpc_networks.yandex_vpc_network.mynet.id
 }
 
 
