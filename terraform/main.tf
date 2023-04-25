@@ -60,6 +60,13 @@ resource "yandex_resourcemanager_folder_iam_member" "images-puller" {
   member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
 }
 
+resource "yandex_resourcemanager_folder_iam_member" "load-balancer-admin" {
+  # Сервисному аккаунту назначается роль "load-balancer.admin"
+  folder_id = var.folder_id
+  role = "load-balancer.admin"
+  member = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
+}
+
 ##############    Create Kubernetes Cluster    ##############
 
 resource "yandex_kubernetes_cluster" "k8s-corpsehead" {
@@ -82,6 +89,7 @@ resource "yandex_kubernetes_cluster" "k8s-corpsehead" {
   depends_on = [
     yandex_resourcemanager_folder_iam_member.k8s-admin,
     yandex_resourcemanager_folder_iam_member.storage-editor,
+    yandex_resourcemanager_folder_iam_member.load-balancer-admin,
     yandex_resourcemanager_folder_iam_member.k8s-clusters-agent,
     yandex_resourcemanager_folder_iam_member.vpc-public-admin,
     yandex_resourcemanager_folder_iam_member.images-puller
@@ -263,16 +271,16 @@ resource "yandex_lb_network_load_balancer" "load-balancer" {
     }
   }
 
-  attached_target_group {
-    target_group_id = "${yandex_lb_target_group.k8s-nodes.id}"
-  }
+#  attached_target_group {
+#    target_group_id = "${yandex_lb_target_group.k8s-nodes.id}"
+#  }
 }
 
-resource "yandex_lb_target_group" "k8s-nodes" {
-  name      = "k8s-nodes"
-  region_id = "ru-central1"
-
-  target {
-    subnet_id = "${yandex_vpc_subnet.mysubnet.id}"
-  }
-}
+#resource "yandex_lb_target_group" "k8s-nodes" {
+#  name      = "k8s-nodes"
+#  region_id = "ru-central1"
+#
+#  target {
+#    subnet_id = "${yandex_vpc_subnet.mysubnet.id}"
+#  }
+#}
