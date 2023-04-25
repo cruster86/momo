@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    yandex = {
+      source = "yandex-cloud/yandex"
+    }
+  }
+}
+
 ##############    Create Cluster Node Group    ##############
 
 resource "yandex_kubernetes_node_group" "momo-group" {
