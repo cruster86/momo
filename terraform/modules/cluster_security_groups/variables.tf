@@ -1,4 +1,3 @@
-variable "network_id " {
+variable "network_id" {
   type    = string
-
 }

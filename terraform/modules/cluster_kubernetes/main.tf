@@ -22,7 +22,7 @@ resource "yandex_kubernetes_cluster" "k8s-corpsehead" {
   }
   service_account_id      = var.service_account_id 
   node_service_account_id = var.service_account_id
-  depends_on = var.depends
+  depends_on = [var.depends]
   kms_provider {
     key_id = var.key_id
   }
