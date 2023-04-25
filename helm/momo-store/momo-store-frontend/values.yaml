@@ -32,5 +32,5 @@ service:
 ingress:
   enabled: true
   className: nginx
-  fqdn: lesnik-vladislav-07.k8s.praktikum-services.tech
+  fqdn: momo-store.corpsehead.space
 

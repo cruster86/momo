@@ -101,6 +101,25 @@ resource "yandex_vpc_network" "mynet" {
   name = "mynet"
 }
 
+resource "yandex_dns_zone" "my-zone" {
+  name        = "my-public-zone"
+  description = "momo-store"
+
+  labels = {
+    label1 = "momo-store"
+  }
+
+  zone    = "momo-store.corpsehead.space."
+  public  = true
+}
+
+resource "yandex_dns_recordset" "rs1" {
+  zone_id = yandex_dns_zone.my-zone.id
+  name    = "momo-store.corpsehead.space."
+  type    = "A"
+  ttl     = 200
+}
+
 resource "yandex_vpc_subnet" "mysubnet" {
   v4_cidr_blocks = ["10.1.0.0/16"]
   zone           = "ru-central1-a"
