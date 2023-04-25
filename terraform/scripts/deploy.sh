@@ -2,11 +2,19 @@
 
 set -x
 
-yc config set token ${YC_TOKEN} &&\
-yc config set cloud-id b1gq442484mq45tns89c &&\
+################   CONNECT TO CLUSTER   ################
+
+yc config set token ${YC_TOKEN}
+
+yc config set cloud-id b1gq442484mq45tns89c
+
 yc config set folder-id b1ggq6pgr3l3rc0t76s1
 
 yc managed-kubernetes cluster get-credentials --id $(yc managed-kubernetes cluster list --format json | jq -r '.[].id') --external --force
+
+yc managed-kubernetes cluster list
+
+################   DEPLOY HELM AHOY   ################
 
 kubectl cluster-info && kubectl get nodes
 
@@ -17,6 +25,8 @@ helm repo list
 kubectl get ns test || kubectl create ns test
 
 helm upgrade --install ahoy --namespace test examples/hello-world --debug --atomic --wait
+
+################   DEPLOY HELM MOMO   ################
 
 # kubectl get ns momo-store || kubectl create ns momo-store
 
@@ -29,16 +39,16 @@ helm upgrade --install ahoy --namespace test examples/hello-world --debug --atom
 #  --debug --atomic --wait \
 #  --set global.backServiceName=momo-store-backend --set global.backServicePort=8081
 
-kubectl get ns hello || kubectl create ns hello
+################   DEPLOY KUBE HELLO   ################
 
-kubectl apply -f - <<END
+kubectl get ns hello || kubectl create ns hello && kubectl apply -f - <<END
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: hello
   namespace: hello
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: hello
