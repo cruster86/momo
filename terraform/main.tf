@@ -118,7 +118,7 @@ resource "yandex_dns_recordset" "rs1" {
   name    = "momo-store.corpsehead.space."
   type    = "A"
   ttl     = 300
-  data    = "${yandex_kubernetes_cluster.k8s-corpsehead.master.0.external_v4_address}"
+  data    = ["${yandex_kubernetes_cluster.k8s-corpsehead.master.0.external_v4_address}"]
 }
 
 resource "yandex_vpc_subnet" "mysubnet" {
