@@ -39,6 +39,12 @@ helm upgrade --install ahoy --namespace test examples/hello-world --debug --atom
 #  --debug --atomic --wait \
 #  --set global.backServiceName=momo-store-backend --set global.backServicePort=8081
 
+################   DEPLOY HELM INGRESS CONTROLLER   ################
+
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install ingress-nginx ingress-nginx/ingress-nginx
+
 ################   DEPLOY KUBE HELLO   ################
 
 kubectl get ns hello || kubectl create ns hello && kubectl apply -f - <<END
