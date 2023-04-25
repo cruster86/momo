@@ -3,9 +3,9 @@ variable "cluster_id" {
 }
 
 variable "subnet_ids" {
-  type    = string
+  type    = list
 }
 
 variable "security_group_ids" {
-  type    = string
+  type    = list
 }
