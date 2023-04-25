@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    yandex = {
+      source = "yandex-cloud/yandex"
+    }
+  }
+}
+
 ##############    Create Kubernetes Cluster    ##############
 
 resource "yandex_kubernetes_cluster" "k8s-corpsehead" {

@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    yandex = {
+      source = "yandex-cloud/yandex"
+    }
+  }
+}
+
 ##############    Create DNS Zone & Records    ##############
 
 resource "yandex_dns_zone" "my-zone" {

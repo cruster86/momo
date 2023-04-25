@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    yandex = {
+      source = "yandex-cloud/yandex"
+    }
+  }
+}
+
 ##############    Create KMS Key    ##############
 
 resource "yandex_kms_symmetric_key" "kms-key" {
