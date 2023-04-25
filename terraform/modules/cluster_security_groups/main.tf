@@ -11,7 +11,7 @@ terraform {
 resource "yandex_vpc_security_group" "k8s-master-whitelist" {
   name        = "k8s-master-whitelist"
   description = "Group rules allow access to the Kubernetes API from the internet. Apply the rules to the cluster only."
-  network_id  = var.mynet-id
+  network_id  = var.network_id 
 
   ingress {
     protocol       = "TCP"
@@ -31,7 +31,7 @@ resource "yandex_vpc_security_group" "k8s-master-whitelist" {
 resource "yandex_vpc_security_group" "k8s-public-services" {
   name        = "k8s-public-services"
   description = "Group rules allow connections to services from the internet. Apply the rules only for node groups."
-  network_id  = var.mynet-id
+  network_id  = var.network_id 
   ingress {
     protocol          = "TCP"
     description       = "Rule allows availability checks from load balancer's address range. It is required for the operation of a fault-tolerant cluster and load balancer services."

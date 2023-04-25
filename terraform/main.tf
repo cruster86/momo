@@ -27,7 +27,7 @@ module "cluster_service_accounts" {
 module "cluster_security_groups" {
   source         = "./modules/cluster_security_groups"
   depends_on = [module.vpc_networks]
-  mynet-id = module.vpc_networks.mynet.id
+  network_id  = module.vpc_networks.mynet.id
 }
 
 
