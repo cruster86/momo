@@ -55,7 +55,7 @@ module "cluster_node_group" {
   source         = "./modules/cluster_node_group"
   depends_on = [
     module.cluster_kubernetes,
-    module.vpc_networks
+    module.vpc_networks,
     module.cluster_security_groups
   ]
 }
