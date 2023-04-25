@@ -260,16 +260,16 @@ resource "yandex_kubernetes_node_group" "momo-group" {
 
 ##############    Create Network Load Balancer and Target Group    ##############
 
-resource "yandex_lb_network_load_balancer" "load-balancer" {
-  name = "load-balancer"
-
-  listener {
-    name = "my-listener"
-    port = 80
-    external_address_spec {
-      ip_version = "ipv4"
-    }
-  }
+#resource "yandex_lb_network_load_balancer" "load-balancer" {
+#  name = "load-balancer"
+#
+#  listener {
+#    name = "my-listener"
+#    port = 80
+#    external_address_spec {
+#      ip_version = "ipv4"
+#    }
+#  }
 
 #  attached_target_group {
 #    target_group_id = "${yandex_lb_target_group.k8s-nodes.id}"
