@@ -8,17 +8,18 @@ terraform {
 }
 
 
-##############    Create IAM Service Accounts    ##############
-
-module "cluster_service_accounts" {
-  source         = "./modules/cluster_service_accounts"
-}
-
-
 ##############    Create VPC Networks    ##############
 
 module "vpc_networks" {
   source         = "./modules/vpc_networks"
+}
+
+
+##############    Create IAM Service Accounts    ##############
+
+module "cluster_service_accounts" {
+  source         = "./modules/cluster_service_accounts"
+  network_id = yandex_vpc_network.mynet.id
 }
 
 
