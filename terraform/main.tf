@@ -274,7 +274,7 @@ resource "yandex_kubernetes_node_group" "momo-group" {
 #  attached_target_group {
 #    target_group_id = "${yandex_lb_target_group.k8s-nodes.id}"
 #  }
-}
+#}
 
 #resource "yandex_lb_target_group" "k8s-nodes" {
 #  name      = "k8s-nodes"
