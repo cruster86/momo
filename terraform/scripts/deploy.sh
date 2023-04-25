@@ -45,6 +45,10 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 helm install ingress-nginx ingress-nginx/ingress-nginx
 
+################   DEPLOY KUBE CETRT-MANAGER   ################
+
+kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.9.1/cert-manager.yaml
+
 ################   DEPLOY KUBE HELLO   ################
 
 kubectl get ns hello || kubectl create ns hello && kubectl apply -f - <<END
