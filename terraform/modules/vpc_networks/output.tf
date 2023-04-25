@@ -1,3 +1,3 @@
-output "network_id" {
-  value  = yandex_vpc_network.mynet.id
+output "mynet" {
+  value  = yandex_vpc_network.mynet
 }
