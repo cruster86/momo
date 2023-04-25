@@ -1,9 +1,6 @@
 locals {
-  cloud_id    = "b1gq442484mq45tns89c"
-  folder_id   = "b1ggq6pgr3l3rc0t76s1"
   k8s_version = "1.22"
   sa_name     = "k8s-admin"
-  token       = "y0_AgAAAAAFqC5fAATuwQAAAADhf8B_vNLCUvJETvyO1pRXrpo-yhLGQb0"
 }
 
 terraform {
@@ -15,52 +12,6 @@ terraform {
   backend "s3" {}
 }
 
-#provider "yandex" {
-#  folder_id = local.folder_id
-#  token     = local.token
-#  cloud_id  = local.cloud_id
-#}
-
-resource "yandex_iam_service_account" "myaccount" {
-  name        = local.sa_name
-  description = "K8S service account"
-}
-
-resource "yandex_resourcemanager_folder_iam_member" "k8s-admin" {
-  # The service account is assigned the k8s.clusters.admin role.
-  folder_id = local.folder_id
-  role      = "k8s.admin"
-  member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
-}
-
-resource "yandex_resourcemanager_folder_iam_member" "storage-editor" {
-  # The service account is assigned the storage.editor role.
-  folder_id = local.folder_id
-  role      = "storage.editor"
-  member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
-}
-
-resource "yandex_resourcemanager_folder_iam_member" "k8s-clusters-agent" {
-  # The service account is assigned the k8s.clusters.agent role.
-  folder_id = local.folder_id
-  role      = "k8s.clusters.agent"
-  member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
-}
-
-resource "yandex_resourcemanager_folder_iam_member" "vpc-public-admin" {
-  # The service account is assigned the vpc.publicAdmin role.
-  folder_id = local.folder_id
-  role      = "vpc.publicAdmin"
-  member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
-}
-
-resource "yandex_resourcemanager_folder_iam_member" "images-puller" {
-  # The service account is assigned the container-registry.images.puller role.
-  folder_id = local.folder_id
-  role      = "container-registry.images.puller"
-  member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
-}
-
 resource "yandex_kms_symmetric_key" "kms-key" {
   # A key for encrypting critical information, including passwords, OAuth tokens, and SSH keys.
   name              = "kms-key"
@@ -68,12 +19,52 @@ resource "yandex_kms_symmetric_key" "kms-key" {
   rotation_period   = "8760h" # 1 year.
 }
 
+resource "yandex_iam_service_account" "myaccount" {
+  name        = var.sa_name
+  description = "K8S service account"
+}
+
+resource "yandex_resourcemanager_folder_iam_member" "k8s-admin" {
+  # The service account is assigned the k8s.clusters.admin role.
+  folder_id = var.folder_id
+  role      = "k8s.admin"
+  member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
+}
+
+resource "yandex_resourcemanager_folder_iam_member" "storage-editor" {
+  # The service account is assigned the storage.editor role.
+  folder_id = var.folder_id
+  role      = "storage.editor"
+  member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
+}
+
+resource "yandex_resourcemanager_folder_iam_member" "k8s-clusters-agent" {
+  # The service account is assigned the k8s.clusters.agent role.
+  folder_id = var.folder_id
+  role      = "k8s.clusters.agent"
+  member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
+}
+
+resource "yandex_resourcemanager_folder_iam_member" "vpc-public-admin" {
+  # The service account is assigned the vpc.publicAdmin role.
+  folder_id = var.folder_id
+  role      = "vpc.publicAdmin"
+  member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
+}
+
+resource "yandex_resourcemanager_folder_iam_member" "images-puller" {
+  # The service account is assigned the container-registry.images.puller role.
+  folder_id = var.folder_id
+  role      = "container-registry.images.puller"
+  member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
+}
+
 resource "yandex_kubernetes_cluster" "k8s-corpsehead" {
   name       = "k8s-corpsehead"
   network_id = yandex_vpc_network.mynet.id
   master {
-    public_ip = true
-    version   = local.k8s_version
+    public_ip = var.k8s_public_ip
+    version   = var.k8s_version
     zonal {
       zone      = yandex_vpc_subnet.mysubnet.zone
       subnet_id = yandex_vpc_subnet.mysubnet.id

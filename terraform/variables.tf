@@ -1,4 +1,4 @@
-##############    Provider Settings
+##############    Provider Settings    ##############
 
 variable "token" {
   type    = string
@@ -15,14 +15,14 @@ variable "folder_id" {
   default = "b1ggq6pgr3l3rc0t76s1"
 }
 
-##############    IAM Service Account Settings
+##############    IAM Service Account Settings    ##############
 
-#variable "sa_name" {
-#  type    = string
-#  default = "k8s-admin"
-#}
+variable "sa_name" {
+  type    = string
+  default = "k8s-admin"
+}
 
-##############    KMS Key Settings
+##############    KMS Key Settings    ##############
 
 #variable "kms_name" {
 #  type    = string
@@ -39,19 +39,18 @@ variable "folder_id" {
 #  default = "8760h"
 #}
 
-##############    Kubernetes Cluster Settings
+##############    Kubernetes Cluster Settings    ##############
 
-#variable "k8s_public_ip" {
-#  type    = bool
-#  default = true
-#}
+variable "k8s_public_ip" {
+  default = true
+}
 
-#variable "k8s_version" {
-#  type    = string
-#  default = "1.22"
-#}
+variable "k8s_version" {
+  type    = string
+  default = "1.22"
+}
 
-##############    Kubernetes Node Group Settings
+##############    Kubernetes Node Group Settings    ##############
 
 #variable "group_name" {
 #  type    = string
@@ -68,7 +67,7 @@ variable "folder_id" {
 #  default = "momo-store"
 #}
 
-##############    Kubernetes Node Template Settings
+##############    Kubernetes Node Template Settings    ##############
 
 #variable "node_platform" {
 #  type    = string
@@ -76,23 +75,19 @@ variable "folder_id" {
 #}
 
 #variable "node_nat" {
-#  type    = bool
 #  default = true
 #}
 
 #variable "node_nem" {
-#  type    = string
-#  default = 2
+#  default = "2"
 #}
 
 #variable "node_cpu" {
-#  type    = string
-#  default = 2
+#  default = "2"
 #}
 
 #variable "node_fract" {
-#  type    = string
-#  default = 20
+#  default = "20"
 #}
 
 #variable "node_disk_type" {
@@ -101,8 +96,7 @@ variable "folder_id" {
 #}
 
 #variable "node_disk_size" {
-#  type    = string
-#  default = 32
+#  default = "32"
 #}
 
 #variable "node_runtime" {
@@ -111,8 +105,7 @@ variable "folder_id" {
 #}
 
 #variable "node_scale" {
-#  type    = string
-#  default = 1
+#  default = "1"
 #}
 
 #variable "node_zone" {
