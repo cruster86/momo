@@ -29,6 +29,8 @@ helm upgrade --install ahoy --namespace test examples/hello-world --debug --atom
 #  --debug --atomic --wait \
 #  --set global.backServiceName=momo-store-backend --set global.backServicePort=8081
 
+kubectl get ns hello || kubectl create ns hello
+
 kubectl apply -f - <<END
 apiVersion: apps/v1
 kind: Deployment
