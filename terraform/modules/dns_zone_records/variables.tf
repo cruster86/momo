@@ -1,3 +1,0 @@
-variable "data" {
-  type    = string
-}
