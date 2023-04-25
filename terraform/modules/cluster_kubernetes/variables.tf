@@ -22,7 +22,7 @@ variable "subnet_id" {
 }
 
 variable "security_group_ids" {
-  type    = string
+  type    = list
 }
 
 variable "key_id" {
@@ -34,7 +34,7 @@ variable "service_account_id" {
 }
 
 variable "depends" {
-  type    = string
+  type    = list
 }
 
 
