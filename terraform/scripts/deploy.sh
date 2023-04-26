@@ -12,27 +12,6 @@ yc managed-kubernetes cluster get-credentials --id $(yc managed-kubernetes clust
 
 yc managed-kubernetes cluster list
 
-################   DEPLOY HELM AHOY   ################
-
-#kubectl cluster-info && kubectl get nodes
-#helm repo add examples https://helm.github.io/examples
-#helm repo list
-#kubectl get ns test || kubectl create ns test
-#helm upgrade --install ahoy --namespace test examples/hello-world --debug --atomic --wait
-
-################   DEPLOY HELM MOMO   ################
-
-# kubectl get ns momo-store || kubectl create ns momo-store
-
-# echo "${NEXUS_REPO_PASS}" | helm repo add nexus https://nexus.k8s.praktikum-services.tech/repository/momo-store-vladislav-lesnik-helm/ --username ${NEXUS_REPO_USER} --password-stdin
-
-# helm repo update nexus
-
-#helm upgrade --install momo-store nexus/momo-store -n momo-store \
-#  --set global.tag="${TAG}" \
-#  --debug --atomic --wait \
-#  --set global.backServiceName=momo-store-backend --set global.backServicePort=8081
-
 ################   DEPLOY HELM INGRESS CONTROLLER   ################
 
 kubectl get ns ingress-nginx || kubectl create ns ingress-nginx
@@ -43,7 +22,18 @@ helm upgrade --install ingress-nginx --namespace ingress-nginx ingress-nginx/ing
 
 ################   DEPLOY KUBE CETRT-MANAGER   ################
 
-kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.9.1/cert-manager.yaml
+helm repo add jetstack https://charts.jetstack.io
+
+helm repo update
+
+helm upgarade --install \
+  cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace \
+  --version v1.11.0 \
+   --set installCRDs=true
+
+#kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.9.1/cert-manager.yaml
 
 ################   DEPLOY KUBE ISSUER FOR NGINX-APP  ################
 
@@ -136,42 +126,15 @@ spec:
                 number: 80
 END
 
-################   DEPLOY KUBE HELLO   ################
+################   DEPLOY HELM MOMO   ################
 
-#kubectl get ns hello || kubectl create ns hello && kubectl apply -f - <<END
-#apiVersion: apps/v1
-#kind: Deployment
-#metadata:
-#  name: hello
-#  namespace: hello
-#spec:
-#  replicas: 1
-#  selector:
-#    matchLabels:
-#      app: hello
-#  template:
-#    metadata:
-#      labels:
-#        app: hello
-#    spec:
-#      containers:
-#      - name: hello-app
-#        image: cr.yandex/crpjd37scfv653nl11i9/hello:1.1
-#---
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: hello
-#  namespace: hello
-#spec:
-#  ports:
-#  # Порт сетевого балансировщика, на котором будут обслуживаться пользовательские запросы.
-#  - port: 80
-#    name: plaintext
-#    # Порт контейнера, на котором доступно приложение.
-#    targetPort: 8080
-#  # Метки селектора, использованные в шаблоне подов при создании объекта Deployment.
-#  selector:
-#    app: hello
-#  type: LoadBalancer
-#END
+# kubectl get ns momo-store || kubectl create ns momo-store
+
+# echo "${NEXUS_REPO_PASS}" | helm repo add nexus https://nexus.k8s.praktikum-services.tech/repository/momo-store-vladislav-lesnik-helm/ --username ${NEXUS_REPO_USER} --password-stdin
+
+# helm repo update nexus
+
+#helm upgrade --install momo-store nexus/momo-store -n momo-store \
+#  --set global.tag="${TAG}" \
+#  --debug --atomic --wait \
+#  --set global.backServiceName=momo-store-backend --set global.backServicePort=8081
