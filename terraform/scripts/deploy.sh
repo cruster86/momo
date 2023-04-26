@@ -49,6 +49,97 @@ helm install ingress-nginx ingress-nginx/ingress-nginx
 
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.9.1/cert-manager.yaml
 
+################   DEPLOY KUBE ISSUER FOR NGINX-APP  ################
+
+kubectl apply -f - <<END
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt
+  namespace: cert-manager
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: corpsehead@yandex.ru
+    privateKeySecretRef:
+      name: letsencrypt
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+END
+
+################   DEPLOY KUBE NGINX-APP   ################
+
+kubectl get ns nginx || kubectl create ns nginx && kubectl apply -f - <<END
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-nginx
+  namespace: nginx
+  labels:
+    app: app-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-nginx
+  template:
+    metadata:
+      labels:
+        app: app-nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-nginx
+  namespace: nginx
+  labels:
+    app: app-nginx
+spec:
+  selector:
+    app: app-nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-nginx-ingress
+  namespace: nginx
+  labels:
+    app: app-nginx
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt"
+spec:
+  tls:
+    - hosts:
+      - momo-store.corpsehead.space
+      secretName: letsencrypt
+  rules:
+    - host: momo-store.corpsehead.space
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: app-nginx
+              port:
+                number: 80
+END
+
 ################   DEPLOY KUBE HELLO   ################
 
 kubectl get ns hello || kubectl create ns hello && kubectl apply -f - <<END
