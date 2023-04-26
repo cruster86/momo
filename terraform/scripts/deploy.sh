@@ -14,24 +14,25 @@ yc managed-kubernetes cluster list
 
 ################   DEPLOY HELM INGRESS CONTROLLER   ################
 
-kubectl get ns ingress-nginx || kubectl create ns ingress-nginx
+# kubectl get ns ingress-nginx || kubectl create ns ingress-nginx
 
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
-helm upgrade --install ingress-nginx --namespace ingress-nginx ingress-nginx/ingress-nginx
+helm upgrade --install \
+  ingress-nginx ingress-nginx/ingress-nginx \
+  --namespace ingress-nginx --create-namespace \
+  --wait --atomic
 
 ################   DEPLOY KUBE CETRT-MANAGER   ################
 
 helm repo add jetstack https://charts.jetstack.io
-
 helm repo update
-
 helm upgrade --install \
   cert-manager jetstack/cert-manager \
-  --namespace cert-manager \
-  --create-namespace \
+  --namespace cert-manager --create-namespace \
   --version v1.11.0 \
-   --set installCRDs=true
+  --set installCRDs=true \
+  --wait --atomic
 
 #kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.9.1/cert-manager.yaml
 
@@ -125,6 +126,8 @@ spec:
               port:
                 number: 80
 END
+
+terraform show
 
 ################   DEPLOY HELM MOMO   ################
 
