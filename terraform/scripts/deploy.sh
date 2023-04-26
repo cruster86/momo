@@ -127,6 +127,7 @@ spec:
                 number: 80
 END
 
+terraform init -backend-config=backend.conf
 terraform show
 
 ################   DEPLOY HELM MOMO   ################
