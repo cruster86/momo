@@ -46,6 +46,8 @@ variables:
   script:
     - cd terraform
     - scripts/deploy.sh
+    - terraform init -backend-config=backend.conf
+    - terraform show
 
 .cluster-destroy:
   script:

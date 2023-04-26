@@ -127,9 +127,6 @@ spec:
                 number: 80
 END
 
-terraform init -backend-config=backend.conf
-terraform show
-
 ################   DEPLOY HELM MOMO   ################
 
 # kubectl get ns momo-store || kubectl create ns momo-store
