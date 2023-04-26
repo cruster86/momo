@@ -123,7 +123,7 @@ resource "yandex_dns_zone" "my-zone" {
     label1 = "momo-store"
   }
 
-  zone    = "momo-store.corpsehead.space."
+  zone    = "corpsehead.space."
   public  = true
 }
 
