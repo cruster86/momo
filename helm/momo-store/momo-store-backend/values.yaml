@@ -7,7 +7,7 @@ image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/momo-store-back
 imagePullPolicy: IfNotPresent
 
 imagePullSecrets:
-  - name: docker-registry
+- name: docker-registry
 
 annotations:
   prometheus.io/port: '8081'

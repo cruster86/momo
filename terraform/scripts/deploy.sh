@@ -50,75 +50,73 @@ spec:
           class: nginx
 END
 
-################   DEPLOY KUBE NGINX-APP   ################
+################   DEPLOY KUBE MOMO-STORE   ################
 
-kubectl get ns nginx || kubectl create ns nginx && kubectl apply -f - <<END
+kubectl get ns momo-store || kubectl create ns momo-store && kubectl apply -f - <<END
+kind: Secret
+apiVersion: v1
+metadata:
+  name: docker-registry
+  namespace: momo-store
+data:
+  .dockerconfigjson: ewoJImF1dGhzIjogewoJCSJnaXRsYWIucHJha3Rpa3VtLXNlcnZpY2VzLnJ1OjUwNTAiOiB7CgkJCSJhdXRoIjogIlpYSmhhMmh0WlhSNmVXRnViM1k2TlZrNWNESnlSM05RUVcxSFVIST0iCgkJfQoJfQp9
+type: kubernetes.io/dockerconfigjson
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-nginx
-  namespace: nginx
+  name: momo-store-backend-backend
+  namespace: momo-store
   labels:
-    app: app-nginx
+    app: momo-store-backend
 spec:
   replicas: 1
+  revisionHistoryLimit: 5
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   selector:
     matchLabels:
-      app: app-nginx
+      app: momo-store-backend
   template:
     metadata:
+      annotations:
+        prometheus.io/port: "8081"
+        prometheus.io/scrape: "true"
       labels:
-        app: app-nginx
+        app: momo-store-backend
     spec:
       containers:
-      - name: nginx
-        image: nginx:latest
-        ports:
-        - containerPort: 80
+        - name: momo-store-backend
+          image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/momo-store-backend:v1.0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: momo-store-backend
+              containerPort: 8081
+          livenessProbe:
+            null
+      imagePullSecrets:
+      - name: docker-registry
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: app-nginx
-  namespace: nginx
+  name: momo-store-backend
+  namespace: momo-store
   labels:
-    app: app-nginx
+    app: momo-store-backend
 spec:
-  selector:
-    app: app-nginx
+  type: ClusterIP
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: app-nginx-ingress
-  namespace: nginx
-  labels:
-    app: app-nginx
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-    cert-manager.io/cluster-issuer: "letsencrypt"
-spec:
-  tls:
-    - hosts:
-      - momo-store.corpsehead.space
-      secretName: letsencrypt
-  rules:
-    - host: momo-store.corpsehead.space
-      http:
-        paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: app-nginx
-              port:
-                number: 80
+    - port: 8081
+      protocol: TCP
+      targetPort: 8081
+  selector:
+    app: momo-store-backend
 END
 
 ################   DEPLOY HELM MOMO   ################
