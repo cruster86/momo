@@ -134,9 +134,9 @@ END
 
 ################   DEPLOY HELM MOMO-STORE   ################
 
-# echo "${NEXUS_REPO_PASS}" | helm repo add nexus https://nexus.k8s.praktikum-services.tech/repository/momo-store-vladislav-lesnik-helm/ --username ${NEXUS_REPO_USER} --password-stdin
+#echo "${NEXUS_REPO_PASS}" | helm repo add nexus https://nexus.k8s.praktikum-services.tech/repository/momo-store-vladislav-lesnik-helm/ --username ${NEXUS_REPO_USER} --password-stdin
 
-# helm repo update nexus
+#helm repo update nexus
 #helm upgrade --install momo-store nexus/momo-store \
 #  --namespace momo-store --create-namespace \
 #  --set global.tag="${TAG}" \
