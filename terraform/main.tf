@@ -32,6 +32,13 @@ resource "yandex_resourcemanager_folder_iam_member" "k8s-admin" {
   member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
 }
 
+resource "yandex_resourcemanager_folder_iam_member" "dns-editor" {
+  # The service account is assigned the dns.editor role.
+  folder_id = var.folder_id
+  role      = "dns.editor"
+  member    = "serviceAccount:${yandex_iam_service_account.myaccount.id}"
+}
+
 resource "yandex_resourcemanager_folder_iam_member" "storage-editor" {
   # The service account is assigned the storage.editor role.
   folder_id = var.folder_id
@@ -88,6 +95,7 @@ resource "yandex_kubernetes_cluster" "k8s-corpsehead" {
   node_service_account_id = yandex_iam_service_account.myaccount.id
   depends_on = [
     yandex_resourcemanager_folder_iam_member.k8s-admin,
+    yandex_resourcemanager_folder_iam_member.dns-editor,
     yandex_resourcemanager_folder_iam_member.storage-editor,
     yandex_resourcemanager_folder_iam_member.load-balancer-admin,
     yandex_resourcemanager_folder_iam_member.k8s-clusters-agent,
@@ -257,30 +265,3 @@ resource "yandex_kubernetes_node_group" "momo-group" {
     auto_repair  = false
   }
 }
-
-##############    Create Network Load Balancer and Target Group    ##############
-
-#resource "yandex_lb_network_load_balancer" "load-balancer" {
-#  name = "load-balancer"
-#
-#  listener {
-#    name = "my-listener"
-#    port = 80
-#    external_address_spec {
-#      ip_version = "ipv4"
-#    }
-#  }
-
-#  attached_target_group {
-#    target_group_id = "${yandex_lb_target_group.k8s-nodes.id}"
-#  }
-#}
-
-#resource "yandex_lb_target_group" "k8s-nodes" {
-#  name      = "k8s-nodes"
-#  region_id = "ru-central1"
-#
-#  target {
-#    subnet_id = "${yandex_vpc_subnet.mysubnet.id}"
-#  }
-#}
