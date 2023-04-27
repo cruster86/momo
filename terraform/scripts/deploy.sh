@@ -250,4 +250,4 @@ helm repo update nexus
 
 IP=$(kubectl -n ingress-nginx get svc ingress-nginx-controller -o json | jq -r '.status.loadBalancer.ingress[].ip')
 
-yc dns zone add-records --name my-public-zone --record 'momo-store 600 A "${IP}"'
+yc dns zone add-records --name my-public-zone --record "momo-store 600 A ${IP}"
