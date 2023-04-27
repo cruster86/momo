@@ -184,14 +184,6 @@ spec:
               mountPath: /etc/nginx/conf.d/default.conf
               subPath: default.conf
               readOnly: true
-          livenessProbe:
-            failureThreshold: 6
-            httpGet:
-              path: /health
-              port: 80
-            initialDelaySeconds: 15
-            periodSeconds: 30
-            timeoutSeconds: 1
       imagePullSecrets:
       - name: docker-registry
       volumes:
