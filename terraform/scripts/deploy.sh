@@ -66,7 +66,7 @@ type: kubernetes.io/dockerconfigjson
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: momo-store-backend-backend
+  name: momo-store-backend
   namespace: momo-store
   labels:
     app: momo-store-backend
@@ -183,7 +183,7 @@ spec:
           volumeMounts:
             - name: nginx-conf
               mountPath: /etc/nginx/conf.d/default.conf
-              subPath: frontend.conf
+              subPath: default.conf
               readOnly: true
           livenessProbe:
             failureThreshold: 6
