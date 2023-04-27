@@ -19,8 +19,8 @@ variables:
     - export "S3_KEY_ID=${S3_KEY_ID}"
     - export "S3_SECRET=${S3_SECRET}"
     - export "SSH_PUB_KEY=${SSH_PUB_KEY}"
-    - export "NEXUS_REPO_USER={NEXUS_REPO_USER}"
-    - export "NEXUS_REPO_PASS={NEXUS_REPO_PASS}"
+    - export "NEXUS_REPO_USER=${NEXUS_REPO_USER}"
+    - export "NEXUS_REPO_PASS=${NEXUS_REPO_PASS}"
     - mkdir ~/.ssh
     - cp $SSH_PRIV_KEY ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
