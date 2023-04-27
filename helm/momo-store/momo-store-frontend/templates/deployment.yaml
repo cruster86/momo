@@ -26,7 +26,7 @@ spec:
               - key: app
                 operator: In
                 values:
-                - {{ .Chart.Name }}
+                - {{ .Release.Name }}
       containers:
         - name: {{ .Chart.Name }}
           image: {{ .Values.image }}:{{ .Values.global.tag }}
