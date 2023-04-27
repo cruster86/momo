@@ -5,8 +5,8 @@ set -x
 ################   CONNECT TO CLUSTER   ################
 
 yc config set token ${YC_TOKEN}
-yc config set cloud-id b1gq442484mq45tns89c
-yc config set folder-id b1ggq6pgr3l3rc0t76s1
+yc config set cloud-id ${YC_CLOUD_ID}
+yc config set folder-id ${YC_FOLDER_ID}
 yc managed-kubernetes cluster get-credentials --id $(yc managed-kubernetes cluster list --format json | jq -r '.[].id') --external --force
 yc managed-kubernetes cluster list
 

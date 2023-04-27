@@ -43,3 +43,60 @@ secret_key = "${S3_SECRET}"
 skip_region_validation      = true
 skip_credentials_validation = true
 EOF
+
+## Create variables.tfstate
+
+cat << EOF > backend.conf
+##############    Provider Settings    ##############
+
+variable "token" {
+  type    = string
+  default = "${YC_TOKEN}"
+}
+
+variable "cloud_id" {
+  type    = string
+  default = "${YC_CLOUD_ID}"
+}
+
+variable "folder_id" {
+  type    = string
+  default = "${YC_FOLFER_ID}"
+}
+
+##############    IAM Service Account Settings    ##############
+
+variable "sa_name" {
+  type    = string
+  default = "k8s-admin"
+}
+
+##############    KMS Key Settings    ##############
+
+variable "kms_name" {
+  type    = string
+  default = "kms-key"
+}
+
+variable "kms_algorithm" {
+  type    = string
+  default = "AES_128"
+}
+
+variable "kms_period" {
+  description =  "1 year"
+  type    = string
+  default = "8760h"
+}
+
+##############    Kubernetes Cluster Settings    ##############
+
+variable "k8s_public_ip" {
+  default = true
+}
+
+variable "k8s_version" {
+  type    = string
+  default = "1.22"
+}
+EOF
