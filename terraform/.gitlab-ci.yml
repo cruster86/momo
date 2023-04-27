@@ -9,7 +9,7 @@ variables:
   TAG: "${CI_COMMIT_TAG}"
   VERSION: "${TAG}"
 
-######  common configs  ######
+################   COMMON CI SCRIPTS   ################
 
 .prepare_env:
   before_script:
@@ -42,7 +42,7 @@ variables:
     paths:
       - terraform/terraform.log 
 
-.app-deploy:
+.momo-deploy:
   script:
     - cd terraform
     - scripts/deploy.sh
@@ -56,7 +56,7 @@ variables:
     - terraform validate && terraform destroy -auto-approve
     - terraform state list
 
-######  main jobs  ######
+################   MAIN CI JOBS   ################
 
 create cluster:
   stage: create
@@ -65,12 +65,12 @@ create cluster:
     - .prepare_env
     - .cluster-create
 
-deploy app:
+deploy momo:
   stage: deploy
   when: manual
   extends:
     - .prepare_env
-    - .app-deploy
+    - .momo-deploy
 #  only:
 #    - tags
 
