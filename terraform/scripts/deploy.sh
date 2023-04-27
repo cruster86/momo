@@ -89,6 +89,15 @@ spec:
       labels:
         app: momo-store-backend
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - momo-store
       containers:
         - name: momo-store-backend
           image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/momo-store-backend:v1.0.1
