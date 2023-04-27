@@ -61,7 +61,7 @@ variable "cloud_id" {
 
 variable "folder_id" {
   type    = string
-  default = "${YC_FOLFER_ID}"
+  default = "${YC_FOLDER_ID}"
 }
 
 ##############    IAM Service Account Settings    ##############
