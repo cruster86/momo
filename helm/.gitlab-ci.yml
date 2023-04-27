@@ -19,6 +19,7 @@ variables:
     - export "NEXUS_REPO_USER=${NEXUS_REPO_USER}"
     - export "NEXUS_REPO_PASS=${NEXUS_REPO_PASS}"
     - export "NEXUS_HELM_REPO=${NEXUS_HELM_REPO}"
+    - export CHART_VERSION="${CHART_VERSION}"
     - mkdir ~/.ssh
     - cp $SSH_PRIV_KEY ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
