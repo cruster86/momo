@@ -1,7 +1,5 @@
 #!/bin/sh
 
-set -x
-
 cd ~
 
 apk update && apk add --no-cache \

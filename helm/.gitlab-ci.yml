@@ -6,20 +6,42 @@ image: alpine:3.17.3
 variables:
   TAG: "${CI_COMMIT_TAG}"
   VERSION: "${TAG}"
-  CHART_VERSION: "${TAG}"
+  CHART_VERSION: "v1.0.1"
+#  CHART_VERSION: "${TAG}"
 
-helm upload:
-  stage: upload
-  when: manual
+################   COMMON CI SCRIPTS   ################
+
+.prepare_env:
   before_script:
     - set -x
+    - export TAG="${TAG}"
+    - export "SSH_PUB_KEY=${SSH_PUB_KEY}"
+    - export "NEXUS_REPO_USER=${NEXUS_REPO_USER}"
+    - export "NEXUS_REPO_PASS=${NEXUS_REPO_PASS}"
+    - export "NEXUS_HELM_REPO=${NEXUS_HELM_REPO}"
+    - mkdir ~/.ssh
+    - cp $SSH_PRIV_KEY ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
     - chmod -R +x scripts/*
     - scripts/prepare.sh
+
+.upload_repo:
   script:
     - cd helm
     - helm version
     - helm package momo-store/
     - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
       --upload-file momo-store-"${CHART_VERSION}".tgz
-  only:
-    - tags
+#    - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
+#      --upload-file momo-store-"${CHART_VERSION}".tgz
+
+################   MAIN CI JOBS   ################
+
+helm upload:
+  stage: upload
+  when: manual
+  extends:
+    - .prepare_env
+    - .upload_repo
+#  only:
+#    - tags

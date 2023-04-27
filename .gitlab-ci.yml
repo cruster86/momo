@@ -31,12 +31,12 @@ terraform:
     changes:
       - terraform/**/*
 
-#helm:
-#  stage: module-pipelines
-#  trigger:
-#    include:
-#      - "/helm/.gitlab-ci.yml"
-#    strategy: depend
-#  only:
-#    changes:
-#      - helm/**/*
+helm:
+  stage: module-pipelines
+  trigger:
+    include:
+      - "/helm/.gitlab-ci.yml"
+    strategy: depend
+  only:
+    changes:
+      - helm/**/*
