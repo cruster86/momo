@@ -44,9 +44,9 @@ skip_region_validation      = true
 skip_credentials_validation = true
 EOF
 
-## Create variables.tfstate
+## Create variables.tf
 
-cat << EOF > backend.conf
+cat << EOF > variables.tf
 ##############    Provider Settings    ##############
 
 variable "token" {
