@@ -50,7 +50,7 @@ spec:
           class: nginx
 END
 
-################   DEPLOY KUBE MOMO-STORE   ################
+################   DEPLOY KUBE MOMO-STORE-BACK   ################
 
 kubectl get ns momo-store || kubectl create ns momo-store && kubectl apply -f - <<END
 kind: Secret
@@ -119,7 +119,11 @@ spec:
     app: momo-store-backend
 END
 
-################   DEPLOY HELM MOMO   ################
+################   DEPLOY KUBE MOMO-STORE-BACK   ################
+
+
+
+################   DEPLOY HELM MOMO-STORE   ################
 
 # echo "${NEXUS_REPO_PASS}" | helm repo add nexus https://nexus.k8s.praktikum-services.tech/repository/momo-store-vladislav-lesnik-helm/ --username ${NEXUS_REPO_USER} --password-stdin
 
