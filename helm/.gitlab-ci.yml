@@ -29,7 +29,7 @@ variables:
   script:
     - cd helm
     - helm version
-    - helm package momo-store/ --version "${CHART_VERSION}"
+    - helm package momo-store/ --version "${CHART_VERSION}" --app-version "${CHART_VERSION}"
     - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
       --upload-file momo-store-"${CHART_VERSION}".tgz
 #    - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
