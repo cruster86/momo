@@ -18,7 +18,7 @@ updateStrategy:
 livenessProbe:
   httpGet:
     path: /health
-    port: 8080
+    port: 80
   initialDelaySeconds: 15
   periodSeconds: 30
   timeoutSeconds: 1
@@ -28,10 +28,11 @@ service:
   name: frontend
   type: ClusterIP
   port: 80
-  targetPort: 8080
+  targetPort: 80
 
 ingress:
   enabled: true
   className: nginx
   fqdn: momo-store.corpsehead.space
+  port: 80
 

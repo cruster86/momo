@@ -131,7 +131,6 @@ data:
   default.conf: |
     server {
         listen       80;
-        server_name  localhost;
         
         location / {
             root   /usr/share/nginx/html;
@@ -179,7 +178,7 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - name: frontend
-              containerPort: 8080
+              containerPort: 80
           volumeMounts:
             - name: nginx-conf
               mountPath: /etc/nginx/conf.d/default.conf
@@ -189,7 +188,7 @@ spec:
             failureThreshold: 6
             httpGet:
               path: /health
-              port: 8080
+              port: 80
             initialDelaySeconds: 15
             periodSeconds: 30
             timeoutSeconds: 1
@@ -216,7 +215,7 @@ spec:
   ports:
     - port: 80
       protocol: TCP
-      targetPort: 8080
+      targetPort: 80
   selector:
     app: momo-store-frontend
 
