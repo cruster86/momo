@@ -121,7 +121,7 @@ END
 
 ################   DEPLOY KUBE MOMO-STORE-BACK   ################
 
-kubectl get ns momo-store || kubectl create ns momo-store && kubectl apply -f - <<END
+kubectl apply -f - <<END
 apiVersion: v1
 kind: ConfigMap
 metadata:
