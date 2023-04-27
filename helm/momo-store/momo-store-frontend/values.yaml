@@ -25,6 +25,7 @@ livenessProbe:
   failureThreshold: 6
 
 service:
+  name: frontend
   type: ClusterIP
   port: 80
   targetPort: 8080

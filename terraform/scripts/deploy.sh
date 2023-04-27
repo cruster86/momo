@@ -94,7 +94,7 @@ spec:
           image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/momo-store-backend:v1.0.1
           imagePullPolicy: IfNotPresent
           ports:
-            - name: momo-store-backend
+            - name: backend
               containerPort: 8081
           livenessProbe:
             null

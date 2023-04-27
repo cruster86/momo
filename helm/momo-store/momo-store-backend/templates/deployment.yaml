@@ -34,7 +34,7 @@ spec:
           image: {{ .Values.image }}:{{ .Values.global.tag }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
           ports:
-            - name: {{ .Chart.Name }}
+            - name: backend
               containerPort: 8081
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
