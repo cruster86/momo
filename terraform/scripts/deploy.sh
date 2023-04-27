@@ -121,11 +121,12 @@ END
 
 ################   DEPLOY KUBE MOMO-STORE-BACK   ################
 
-kubectl apply -f - <<END
+kubectl get ns momo-store || kubectl create ns momo-store && kubectl apply -f - <<END
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: nginx-conf
+  namespace: momo-store
 data:
   default.conf: |
     server {
@@ -153,6 +154,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: momo-store-frontend
+  namespace: momo-store
   labels:
     app: momo-store-frontend
 spec:
@@ -206,6 +208,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: momo-store-frontend
+  namespace: momo-store
   labels:
     app: momo-store-frontend
 spec:
@@ -222,6 +225,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: momo-store-frontend
+  namespace: momo-store
 spec:
   ingressClassName: "nginx"
   tls:
