@@ -23,7 +23,7 @@ variables:
     - cp $SSH_PRIV_KEY ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - chmod -R +x scripts/*
-    - scripts/prepare.sh
+    - scripts/env.sh
 
 .upload_repo:
   script:
