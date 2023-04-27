@@ -4,8 +4,8 @@ type: application
 name: momo-store
 description: Momo Store Helm Chart
 
-version: ""
-appVersion: ""
+version: v1.0.1
+appVersion: v1.0.1
 
 dependencies:
   - name: momo-store-backend
