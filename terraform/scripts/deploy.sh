@@ -7,14 +7,10 @@ set -x
 yc config set token ${YC_TOKEN}
 yc config set cloud-id b1gq442484mq45tns89c
 yc config set folder-id b1ggq6pgr3l3rc0t76s1
-
 yc managed-kubernetes cluster get-credentials --id $(yc managed-kubernetes cluster list --format json | jq -r '.[].id') --external --force
-
 yc managed-kubernetes cluster list
 
 ################   DEPLOY HELM INGRESS CONTROLLER   ################
-
-# kubectl get ns ingress-nginx || kubectl create ns ingress-nginx
 
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
@@ -33,8 +29,6 @@ helm upgrade --install \
   --version v1.11.0 \
   --set installCRDs=true \
   --wait --atomic
-
-#kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.9.1/cert-manager.yaml
 
 ################   DEPLOY KUBE ISSUER FOR NGINX-APP  ################
 
@@ -129,13 +123,11 @@ END
 
 ################   DEPLOY HELM MOMO   ################
 
-# kubectl get ns momo-store || kubectl create ns momo-store
-
 # echo "${NEXUS_REPO_PASS}" | helm repo add nexus https://nexus.k8s.praktikum-services.tech/repository/momo-store-vladislav-lesnik-helm/ --username ${NEXUS_REPO_USER} --password-stdin
 
 # helm repo update nexus
-
-#helm upgrade --install momo-store nexus/momo-store -n momo-store \
+#helm upgrade --install momo-store nexus/momo-store \
+#  --namespace momo-store --create-namespace \
 #  --set global.tag="${TAG}" \
-#  --debug --atomic --wait \
-#  --set global.backServiceName=momo-store-backend --set global.backServicePort=8081
+#  --set global.backServiceName=momo-store-backend --set global.backServicePort=8081 \
+#  --debug --atomic --wait
