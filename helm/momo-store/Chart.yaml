@@ -9,6 +9,6 @@ appVersion: v1.0.1
 
 dependencies:
   - name: momo-store-backend
-    version: 1.0.1
+    version: v1.0.1
   - name: momo-store-frontend
-    version: 1.0.1
+    version: v1.0.1
