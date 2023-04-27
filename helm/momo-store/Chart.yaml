@@ -4,7 +4,7 @@ type: application
 name: momo-store
 description: Momo Store Helm Chart
 
-version: 1.0.0
+version: ${CHART_VERSION}
 appVersion: "1.0.1"
 
 dependencies:
