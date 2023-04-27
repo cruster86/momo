@@ -200,8 +200,8 @@ spec:
           configMap:
             name: nginx-conf
             items:
-              - key: frontend.conf
-                path: frontend.conf
+              - key: default.conf
+                path: default.conf
 
 ---
 apiVersion: v1
