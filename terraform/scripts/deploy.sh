@@ -248,6 +248,6 @@ helm repo update nexus
 
 ################   ADD RESOURCE RECORD   ################
 
-IP=${kubectl -n ingress-nginx get svc ingress-nginx-controller -o json | jq -r '.status.loadBalancer.ingress[].ip'}
+IP=$(kubectl -n ingress-nginx get svc ingress-nginx-controller -o json | jq -r '.status.loadBalancer.ingress[].ip')
 
-yc dns zone add-records --name my-zone --record 'momo-store 600 A "${IP}"'
+yc dns zone add-records --name my-public-zone --record 'momo-store 600 A "${IP}"'
