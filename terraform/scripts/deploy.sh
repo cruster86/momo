@@ -121,7 +121,124 @@ END
 
 ################   DEPLOY KUBE MOMO-STORE-BACK   ################
 
+kubectl get ns momo-store || kubectl create ns momo-store && kubectl apply -f - <<END
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+data:
+  default.conf: |
+    server {
+        listen       80;
+        server_name  localhost;
+        
+        location / {
+            root   /usr/share/nginx/html;
+            index  index.html index.htm;
+            try_files $uri $uri/ /index.html;
+        }
+    
+        location ~ ^/(?:products|categories|orders|metrics|auth/whoami) {
+            proxy_pass http://momo-store-backend:8081;
+        }
+    
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+    }
 
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: momo-store-frontend
+  labels:
+    app: momo-store-frontend
+spec:
+  replicas: 1
+  revisionHistoryLimit: 5
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: momo-store-frontend
+  template:
+    metadata:
+      labels:
+        app: momo-store-frontend
+    spec:
+      containers:
+        - name: momo-store-frontend
+          image: gitlab.praktikum-services.ru:5050/zerodistance/momo-store/momo-store-frontend:v1.0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: frontend
+              containerPort: 8080
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf.d/default.conf
+              subPath: frontend.conf
+              readOnly: true
+          livenessProbe:
+            failureThreshold: 6
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            timeoutSeconds: 1
+      imagePullSecrets:
+      - name: docker-registry
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+            items:
+              - key: frontend.conf
+                path: frontend.conf
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: momo-store-frontend
+  labels:
+    app: momo-store-frontend
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: momo-store-frontend
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: momo-store-frontend
+spec:
+  ingressClassName: "nginx"
+  tls:
+    - hosts:
+        - "momo-store.corpsehead.space"
+  rules:
+    - host: "momo-store.corpsehead.space"
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: momo-store-frontend
+              port:
+                number: 80
+END
 
 ################   DEPLOY HELM MOMO-STORE   ################
 
