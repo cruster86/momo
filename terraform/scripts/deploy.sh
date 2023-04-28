@@ -253,3 +253,5 @@ kubectl -n ingress-nginx get svc ingress-nginx-controller -o json | jq -r '.stat
 # yc dns zone add-records --name my-public-zone --record "momo-store 600 A ${IP}"
 
 # --set global.tag="${TAG}"
+
+###
