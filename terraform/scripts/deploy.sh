@@ -242,7 +242,7 @@ echo ${NEXUS_REPO_PASS} | helm repo add nexus ${NEXUS_HELM_REPO} --username ${NE
 helm repo update nexus
 helm upgrade --install momo-store nexus/momo-store \
   --namespace momo-store --create-namespace \
-  --set global.tag="v1.0.1" \
+  --set global.tag="v1.0.2" \
   --set global.backServiceName=momo-store-backend --set global.backServicePort=8081 \
   --debug --atomic --wait
 
