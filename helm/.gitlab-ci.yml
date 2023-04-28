@@ -6,8 +6,8 @@ image: alpine:3.17.3
 variables:
   TAG: "${CI_COMMIT_TAG}"
   VERSION: "${TAG}"
-  CHART_VERSION: "${TAG}"
-#  CHART_VERSION: "v1.0.1"
+#  CHART_VERSION: "${TAG}"
+  CHART_VERSION: "v1.0.1"
 
 ################   COMMON CI SCRIPTS   ################
 
@@ -41,5 +41,5 @@ helm upload:
   extends:
     - .prepare_env
     - .upload_repo
-  only:
-    - tags
+#  only:
+#    - tags
