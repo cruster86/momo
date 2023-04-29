@@ -6,8 +6,7 @@ image: alpine:3.17.3
 variables:
   TAG: "${CI_COMMIT_TAG}"
   VERSION: "${TAG}"
-  CHART_VERSION: "${TAG}"
-#  CHART_VERSION: "v1.0.2"
+#  VERSION: "v1.0.5"
 
 ################   COMMON CI SCRIPTS   ################
 
@@ -29,17 +28,17 @@ variables:
   script:
     - cd helm
     - helm version
-    - helm package momo-store/ --version "${CHART_VERSION}" --app-version "${CHART_VERSION}"
+    - helm package momo-store/ --version "${VERSION}" --app-version "${VERSION}"
     - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
-      --upload-file momo-store-"${CHART_VERSION}".tgz
+      --upload-file momo-store-"${VERSION}".tgz
 
 ################   MAIN CI JOBS   ################
 
 helm upload:
   stage: upload
+  when: manual
   extends:
     - .prepare_env
     - .upload_repo
-  only:
-    - tags
-#  when: manual
+#  only:
+#    - tags

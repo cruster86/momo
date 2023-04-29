@@ -57,16 +57,10 @@ echo ${NEXUS_REPO_PASS} | helm repo add nexus ${NEXUS_HELM_REPO} --username ${NE
 helm repo update nexus
 helm upgrade --install momo-store nexus/momo-store \
   --namespace momo-store --create-namespace \
-  --set global.tag=${TAG} \
+  --set global.tag=${VERSION} \
   --set global.backServiceName=momo-store-backend --set global.backServicePort=8081 \
   --debug --atomic --wait
 
-################   ADD RESOURCE RECORD   ################
+################   SHOW INGRESS IP   ################
 
 kubectl -n ingress-nginx get svc ingress-nginx-controller -o json | jq -r '.status.loadBalancer.ingress[].ip'
-
-# yc dns zone add-records --name my-public-zone --record "momo-store 600 A ${IP}"
-
-# --set global.tag="${TAG}"
-
-###
