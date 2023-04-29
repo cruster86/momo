@@ -32,34 +32,76 @@ helm upgrade --install \
 
 ################   DEPLOY KUBE ISSUER FOR NGINX-APP  ################
 
+#kubectl apply -f - <<END
+#apiVersion: cert-manager.io/v1
+#kind: ClusterIssuer
+#metadata:
+#  name: letsencrypt
+#  namespace: cert-manager
+#spec:
+#  acme:
+#    server: https://acme-v02.api.letsencrypt.org/directory
+#    email: corpsehead@yandex.ru
+#    privateKeySecretRef:
+#      name: letsencrypt
+#    solvers:
+#    - http01:
+#        ingress:
+#          class: nginx
+#END
+
+####################   RESOLVE ACME DNS01   ####################
+
+git clone https://github.com/yandex-cloud/cert-manager-webhook-yandex.git
+
+helm install -n cert-manager yandex-webhook cert-manager-webhook-yandex/deploy/cert-manager-webhook-yandex/
+
+ID=$(yc iam service-account list | grep k8s-admin | awk '{print $2}')
+
+yc iam key create iamkey \
+    --service-account-id=${ID} \
+    --format=json \
+    --output=iamkey.json
+
+kubectl create secret generic cert-manager-secret --from-file=iamkey.json -n cert-manager
+
 kubectl apply -f - <<END
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: letsencrypt
-  namespace: cert-manager
+ name: clusterissuer
+ namespace: default
 spec:
-  acme:
-    server: https://acme-v02.api.letsencrypt.org/directory
-    email: corpsehead@yandex.ru
-    privateKeySecretRef:
-      name: letsencrypt
-    solvers:
-    - http01:
-        ingress:
-          class: nginx
-END
+ acme:
+  email: corpsehead@yandex.ru
+  server: https://acme-staging-v02.api.letsencrypt.org/directory
+  privateKeySecretRef:
+    name: letsencrypt-key
+  solvers:
+  - dns01:
+    webhook:
+      config:
+        folder: ${YC_FOLDER_ID}
+        serviceAccountSecretRef:
+          name: cert-manager-secret
+          key: iamkey.json
+      groupName: acme.cloud.yandex.com
+      solverName: yandex-cloud-dns
 
-####################
-
-git clone https://github.com/yandex-cloud/cert-manager-webhook-yandex.git
-
-helm install -n cert-manager yandex-webhook ./cert-manager-webhook-yandex
-
-#yc iam key create iamkey \
-#    --service-account-id=<your service account ID> \
-#    --format=json \
-#    --output=iamkey.json
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: momo-store
+  namespace: default
+spec:
+  secretName: momo-secret
+  issuerRef:
+    name: clusterissuer
+    kind: ClusterIssuer
+  dnsNames:
+  - momo-store.corpsehead.space
+EOF
 
 ################   DEPLOY HELM MOMO-STORE   ################
 
