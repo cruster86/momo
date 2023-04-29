@@ -19,7 +19,7 @@ helm upgrade --install \
   --namespace ingress-nginx --create-namespace \
   --wait --atomic
 
-################   DEPLOY KUBE CETRT-MANAGER   ################
+################   DEPLOY KUBE CETRT-MANAGER   #################
 
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
