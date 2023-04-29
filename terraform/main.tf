@@ -86,10 +86,10 @@ resource "yandex_kubernetes_cluster" "k8s-corpsehead" {
       zone      = yandex_vpc_subnet.mysubnet.zone
       subnet_id = yandex_vpc_subnet.mysubnet.id
     }
-    security_group_ids = [
-      yandex_vpc_security_group.k8s-public-services.id,
-      yandex_vpc_security_group.k8s-master-whitelist.id
-    ]
+#    security_group_ids = [
+#      yandex_vpc_security_group.k8s-public-services.id,
+#      yandex_vpc_security_group.k8s-master-whitelist.id
+#    ]
   }
   service_account_id      = yandex_iam_service_account.myaccount.id
   node_service_account_id = yandex_iam_service_account.myaccount.id
