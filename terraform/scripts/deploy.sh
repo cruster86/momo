@@ -43,7 +43,7 @@ helm upgrade --install \
 #    server: https://acme-v02.api.letsencrypt.org/directory
 #    email: corpsehead@yandex.ru
 #    privateKeySecretRef:
-#      name: letsencrypt
+#      name: letsencrypt-key
 #    solvers:
 #    - http01:
 #        ingress:
@@ -89,7 +89,7 @@ metadata:
   name: momo-store
   namespace: default
 spec:
-  secretName: momo-secret
+  secretName: momo-tls
   issuerRef:
     name: clusterissuer
     kind: ClusterIssuer

@@ -8,7 +8,7 @@ spec:
   tls:
     - hosts:
         - {{ .Values.ingress.fqdn | quote }}
-      secretName: letsencrypt
+      secretName: momo-tls
   rules:
     - host: {{ .Values.ingress.fqdn | quote }}
       http:
