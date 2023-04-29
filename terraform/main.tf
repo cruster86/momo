@@ -123,17 +123,17 @@ resource "yandex_vpc_subnet" "mysubnet" {
 
 ##############    Create DNS Zone & Records    ##############
 
-#resource "yandex_dns_zone" "my-zone" {
-#  name        = "my-public-zone"
-#  description = "momo-store"
-#
-#  labels = {
-#    label1 = "momo-store"
-#  }
-#
-#  zone    = "corpsehead.space."
-#  public  = true
-#}
+resource "yandex_dns_zone" "my-zone" {
+  name        = "my-public-zone"
+  description = "momo-store"
+
+  labels = {
+    label1 = "momo-store"
+  }
+
+  zone    = "corpsehead.space."
+  public  = true
+}
 
 #resource "yandex_dns_recordset" "rs1" {
 #  zone_id = yandex_dns_zone.my-zone.id

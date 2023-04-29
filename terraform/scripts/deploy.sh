@@ -50,6 +50,17 @@ spec:
           class: nginx
 END
 
+####################
+
+git clone https://github.com/yandex-cloud/cert-manager-webhook-yandex.git
+
+helm install -n cert-manager yandex-webhook ./deploy/cert-manager-webhook-yandex
+
+#yc iam key create iamkey \
+#    --service-account-id=<your service account ID> \
+#    --format=json \
+#    --output=iamkey.json
+
 ################   DEPLOY HELM MOMO-STORE   ################
 
 echo ${NEXUS_REPO_PASS} | helm repo add nexus ${NEXUS_HELM_REPO} --username ${NEXUS_REPO_USER} --password-stdin
@@ -61,6 +72,8 @@ helm upgrade --install momo-store nexus/momo-store \
   --set global.backServiceName=momo-store-backend --set global.backServicePort=8081 \
   --debug --atomic --wait
 
-################   SHOW INGRESS IP   ################
+################   ADD RESOURCE RECORD   ################
 
-kubectl -n ingress-nginx get svc ingress-nginx-controller -o json | jq -r '.status.loadBalancer.ingress[].ip'
+IP=$(kubectl -n ingress-nginx get svc ingress-nginx-controller -o json | jq -r '.status.loadBalancer.ingress[].ip')
+
+yc dns zone add-records --name my-public-zone --record "momo-store 600 A ${IP}"
