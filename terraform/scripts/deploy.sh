@@ -54,7 +54,7 @@ helm upgrade --install \
 
 git clone https://github.com/yandex-cloud/cert-manager-webhook-yandex.git
 
-helm install -n cert-manager yandex-webhook cert-manager-webhook-yandex/deploy/cert-manager-webhook-yandex/
+helm upgrade --install -n cert-manager yandex-webhook cert-manager-webhook-yandex/deploy/cert-manager-webhook-yandex/
 
 ID=$(yc iam service-account list | grep k8s-admin | awk '{print $2}')
 
