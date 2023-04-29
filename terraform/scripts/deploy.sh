@@ -54,7 +54,7 @@ END
 
 git clone https://github.com/yandex-cloud/cert-manager-webhook-yandex.git
 
-helm install -n cert-manager yandex-webhook ./deploy/cert-manager-webhook-yandex
+helm install -n cert-manager yandex-webhook ./cert-manager-webhook-yandex
 
 #yc iam key create iamkey \
 #    --service-account-id=<your service account ID> \
