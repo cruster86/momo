@@ -101,7 +101,7 @@ spec:
     kind: ClusterIssuer
   dnsNames:
   - momo-store.corpsehead.space
-EOF
+END
 
 ################   DEPLOY HELM MOMO-STORE   ################
 
