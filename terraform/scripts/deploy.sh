@@ -30,14 +30,14 @@ helm upgrade --install \
   --set installCRDs=true \
   --wait --atomic
 
-################   DEPLOY KUBE ISSUER FOR NGINX-APP  ################
+################   DEPLOY KUBE CLUSTER ISSUER  ################
 
 #kubectl apply -f - <<END
 #apiVersion: cert-manager.io/v1
 #kind: ClusterIssuer
 #metadata:
 #  name: letsencrypt
-#  namespace: cert-manager
+#  namespace: default
 #spec:
 #  acme:
 #    server: https://acme-v02.api.letsencrypt.org/directory
@@ -50,19 +50,14 @@ helm upgrade --install \
 #          class: nginx
 #END
 
-####################   RESOLVE ACME DNS01   ####################
+####################   SET RESOLVE ACME DNS01   ####################
+
+# https://cloud.yandex.ru/docs/tutorials/infrastructure-management/cert-manager-webhook
 
 git clone https://github.com/yandex-cloud/cert-manager-webhook-yandex.git
-
 helm upgrade --install -n cert-manager yandex-webhook cert-manager-webhook-yandex/deploy/cert-manager-webhook-yandex/
-
-ID=$(yc iam service-account list | grep k8s-admin | awk '{print $2}')
-
-yc iam key create iamkey \
-    --service-account-id=${ID} \
-    --format=json \
-    --output=iamkey.json
-
+SA_ID=$(yc iam service-account list | grep k8s-admin | awk '{print $2}')
+yc iam key create iamkey --service-account-id=${SA_ID} --format=json --output=iamkey.json
 kubectl create secret generic cert-manager-secret --from-file=iamkey.json -n cert-manager
 
 kubectl apply -f - <<END
@@ -87,7 +82,6 @@ spec:
             key: iamkey.json
         groupName: acme.cloud.yandex.com
         solverName: yandex-cloud-dns
-
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -106,16 +100,14 @@ END
 ################   DEPLOY HELM MOMO-STORE   ################
 
 echo ${NEXUS_REPO_PASS} | helm repo add nexus ${NEXUS_HELM_REPO} --username ${NEXUS_REPO_USER} --password-stdin
-
 helm repo update nexus
 helm upgrade --install momo-store nexus/momo-store \
   --namespace momo-store --create-namespace \
   --set global.tag="v1.0.5" \
   --set global.backServiceName=momo-store-backend --set global.backServicePort=8081 \
-  --debug --atomic --wait
+  --atomic --wait
 
 ################   ADD RESOURCE RECORD   ################
 
 IP=$(kubectl -n ingress-nginx get svc ingress-nginx-controller -o json | jq -r '.status.loadBalancer.ingress[].ip')
-
 yc dns zone add-records --name my-public-zone --record "momo-store 600 A ${IP}"

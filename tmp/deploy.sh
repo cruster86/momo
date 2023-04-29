@@ -1,5 +1,3 @@
-#!/bin/bash
-
 ################   DEPLOY KUBE MOMO-STORE-BACK   ################
 
 #kubectl get ns momo-store || kubectl create ns momo-store && kubectl apply -f - <<END
@@ -188,9 +186,36 @@
 ################   ADD RESOURCE RECORD   ################
 
 kubectl -n ingress-nginx get svc ingress-nginx-controller -o json | jq -r '.status.loadBalancer.ingress[].ip'
+yc dns zone add-records --name my-public-zone --record "momo-store 600 A ${IP}"
 
-# yc dns zone add-records --name my-public-zone --record "momo-store 600 A ${IP}"
+#########################################################
 
 # --set global.tag="${TAG}"
 
-###
+#########################################################
+
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Chart.Name }}
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt"
+spec:
+  ingressClassName: {{ .Values.ingress.className | quote }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.fqdn | quote }}
+      secretName: letsencrypt
+  rules:
+    - host: {{ .Values.ingress.fqdn | quote }}
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ .Chart.Name }}
+              port:
+                number: {{ .Values.ingress.port }}
+{{- end }}
