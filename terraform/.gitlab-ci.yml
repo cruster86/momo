@@ -8,7 +8,7 @@ stages:
 variables:
   TAG: "${CI_COMMIT_TAG}"
 #  VERSION: "${TAG}"
-  VERSION: "v1.0.5"
+  VERSION: "v1.0.6"
 
 ################   COMMON CI SCRIPTS   ################
 
