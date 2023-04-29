@@ -79,14 +79,14 @@ spec:
     name: letsencrypt-key
   solvers:
   - dns01:
-    webhook:
-      config:
-        folder: ${YC_FOLDER_ID}
-        serviceAccountSecretRef:
-          name: cert-manager-secret
-          key: iamkey.json
-      groupName: acme.cloud.yandex.com
-      solverName: yandex-cloud-dns
+      webhook:
+        config:
+          folder: ${YC_FOLDER_ID}
+          serviceAccountSecretRef:
+            name: cert-manager-secret
+            key: iamkey.json
+        groupName: acme.cloud.yandex.com
+        solverName: yandex-cloud-dns
 
 ---
 apiVersion: cert-manager.io/v1
