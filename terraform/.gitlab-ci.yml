@@ -74,8 +74,8 @@ deploy momo:
   extends:
     - .prepare_env
     - .momo-deploy
-#  only:
-#    - tags
+  only:
+    - tags
 
 destroy cluster:
   stage: destroy
