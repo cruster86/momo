@@ -20,7 +20,7 @@ data:
           - send_resolved: true
             bot_token: '5933756043:AAE8JLL5KIzgrNBeTP5e-1bkbJy4YRoeGjs'
             chat_id: -1001813217062
-            message: "Notification!\nsummary: {{ .CommonAnnotations.summary }}\ndescription: {{ .CommonAnnotations.description }}"
+            message: "Notification!\nsummary: "
 kind: ConfigMap
 metadata:
   labels:
