@@ -1,0 +1,16 @@
+---
+apiVersion: v2
+type: application
+name: monitoring-tools
+description: Momo Store Monitoring Tools
+
+version: v1.0.1
+appVersion: v1.0.1
+
+dependencies:
+  - name: alertmanager
+    version: v0.23.0
+  - name: grafana
+    version: v0.23.0
+  - name: prometheus
+    version: v1.0.1

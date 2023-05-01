@@ -24,7 +24,7 @@ variables:
     - chmod -R +x scripts/*
     - scripts/env.sh
 
-.upload_repo:
+.upload_momo-store:
   script:
     - cd helm
     - helm version
@@ -32,13 +32,28 @@ variables:
     - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
       --upload-file momo-store-"${VERSION}".tgz
 
+.upload_monitoring-tools:
+  script:
+    - cd helm
+    - helm version
+    - helm package monitoring-tools/ --version "${VERSION}" --app-version "${VERSION}"
+    - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
+      --upload-file monitoring-tools-"${VERSION}".tgz
+
 ################   MAIN CI JOBS   ################
 
-helm upload:
+momo-store upload:
   stage: upload
   when: manual
   extends:
     - .prepare_env
-    - .upload_repo
+    - .upload_momo-store
 #  only:
 #    - tags
+
+monitoring-tools upload:
+  stage: upload
+  when: manual
+  extends:
+    - .prepare_env
+    - .upload_monitoring-tools

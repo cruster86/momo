@@ -1,5 +1,6 @@
 apiVersion: v2
-name: prometheus-student
+name: prometheus
 type: application
+description: momo-store prometheus
 version: 1.0.1
-appVersion: "v1.0.1"
+appVersion: v1.0.1
