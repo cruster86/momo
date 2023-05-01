@@ -67,4 +67,8 @@ helm upgrade --install momo-store nexus/momo-store \
 
 kubectl -n ingress-nginx get svc ingress-nginx-controller -o json | jq -r '.status.loadBalancer.ingress[].ip'
 
-##
+################   DEPLOY HELM MONITORING   ################
+
+helm upgrade --install monitoring-tools nexus/monitoring-tools \
+  --namespace monitoring --create-namespace \
+  --atomic --wait

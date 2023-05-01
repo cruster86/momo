@@ -26,3 +26,4 @@ metadata:
   labels:
     app: alertmanager
   name: alertmanager
+  namespace: {{ .Release.Namespace }}

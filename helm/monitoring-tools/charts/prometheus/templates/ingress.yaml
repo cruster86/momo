@@ -11,7 +11,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: "prometheus.momo.sirius.online"
+  - host: "prometheus-momo.sirius.online"
     http:
       paths:
       - path: /
