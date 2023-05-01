@@ -15,8 +15,6 @@ spec:
       {{- include "frontend.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      annotations:
-{{ toYaml .Values.annotations | indent 8 }}
       labels:
         {{- include "frontend.selectorLabels" . | nindent 8 }}
     spec:
