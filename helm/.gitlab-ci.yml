@@ -6,7 +6,7 @@ image: alpine:3.17.3
 variables:
   TAG: "${CI_COMMIT_TAG}"
 #  VERSION: "${TAG}"
-  VERSION: "v1.0.7"
+  VERSION: "v1.0.8"
 
 ################   COMMON CI SCRIPTS   ################
 

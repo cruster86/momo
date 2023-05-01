@@ -24,6 +24,6 @@ service:
 ingress:
   enabled: true
   className: nginx
-  fqdn: momo-store.corpsehead.space
+  fqdn: momo.sirius.online
   port: 80
 

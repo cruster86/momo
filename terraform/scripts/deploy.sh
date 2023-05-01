@@ -32,70 +32,70 @@ helm upgrade --install \
 
 ################   DEPLOY KUBE CLUSTER ISSUER  ################
 
-#kubectl apply -f - <<END
-#apiVersion: cert-manager.io/v1
-#kind: ClusterIssuer
-#metadata:
-#  name: letsencrypt
-#  namespace: default
-#spec:
-#  acme:
-#    server: https://acme-v02.api.letsencrypt.org/directory
-#    email: corpsehead@yandex.ru
-#    privateKeySecretRef:
-#      name: letsencrypt-key
-#    solvers:
-#    - http01:
-#        ingress:
-#          class: nginx
-#END
+kubectl apply -f - <<END
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt
+  namespace: default
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: corpsehead@yandex.ru
+    privateKeySecretRef:
+      name: letsencrypt-key
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+END
 
 ####################   SET RESOLVE ACME DNS01   ####################
 
 # https://cloud.yandex.ru/docs/tutorials/infrastructure-management/cert-manager-webhook
 
-git clone https://github.com/yandex-cloud/cert-manager-webhook-yandex.git
-helm upgrade --install -n cert-manager yandex-webhook cert-manager-webhook-yandex/deploy/cert-manager-webhook-yandex/
-SA_ID=$(yc iam service-account list | grep k8s-admin | awk '{print $2}')
-yc iam key create iamkey --service-account-id=${SA_ID} --format=json --output=iamkey.json
-kubectl create secret generic cert-manager-secret --from-file=iamkey.json -n cert-manager
+#git clone https://github.com/yandex-cloud/cert-manager-webhook-yandex.git
+#helm upgrade --install -n cert-manager yandex-webhook cert-manager-webhook-yandex/deploy/cert-manager-webhook-yandex/
+#SA_ID=$(yc iam service-account list | grep k8s-admin | awk '{print $2}')
+#yc iam key create iamkey --service-account-id=${SA_ID} --format=json --output=iamkey.json
+#kubectl create secret generic cert-manager-secret --from-file=iamkey.json -n cert-manager
 
-kubectl apply -f - <<END
-apiVersion: cert-manager.io/v1
-kind: ClusterIssuer
-metadata:
- name: clusterissuer
- namespace: default
-spec:
- acme:
-  email: corpsehead@yandex.ru
-  server: https://acme-staging-v02.api.letsencrypt.org/directory
-  privateKeySecretRef:
-    name: letsencrypt-key
-  solvers:
-  - dns01:
-      webhook:
-        config:
-          folder: ${YC_FOLDER_ID}
-          serviceAccountSecretRef:
-            name: cert-manager-secret
-            key: iamkey.json
-        groupName: acme.cloud.yandex.com
-        solverName: yandex-cloud-dns
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: momo-store
-  namespace: default
-spec:
-  secretName: momo-tls
-  issuerRef:
-    name: clusterissuer
-    kind: ClusterIssuer
-  dnsNames:
-  - momo-store.corpsehead.space
-END
+#kubectl apply -f - <<END
+#apiVersion: cert-manager.io/v1
+#kind: ClusterIssuer
+#metadata:
+# name: clusterissuer
+# namespace: default
+#spec:
+# acme:
+#  email: corpsehead@yandex.ru
+#  server: https://acme-staging-v02.api.letsencrypt.org/directory
+#  privateKeySecretRef:
+#    name: letsencrypt-key
+#  solvers:
+#  - dns01:
+#      webhook:
+#        config:
+#          folder: ${YC_FOLDER_ID}
+#          serviceAccountSecretRef:
+#            name: cert-manager-secret
+#            key: iamkey.json
+#        groupName: acme.cloud.yandex.com
+#        solverName: yandex-cloud-dns
+#---
+#apiVersion: cert-manager.io/v1
+#kind: Certificate
+#metadata:
+#  name: momo-store
+#  namespace: default
+#spec:
+#  secretName: momo-tls
+#  issuerRef:
+#    name: clusterissuer
+#    kind: ClusterIssuer
+#  dnsNames:
+#  - momo-store.corpsehead.space
+#END
 
 ################   DEPLOY HELM MOMO-STORE   ################
 
@@ -110,4 +110,5 @@ helm upgrade --install momo-store nexus/momo-store \
 ################   ADD RESOURCE RECORD   ################
 
 IP=$(kubectl -n ingress-nginx get svc ingress-nginx-controller -o json | jq -r '.status.loadBalancer.ingress[].ip')
-yc dns zone add-records --name my-public-zone --record "momo-store 600 A ${IP}"
+
+#yc dns zone add-records --name my-public-zone --record "momo-store 600 A ${IP}"
