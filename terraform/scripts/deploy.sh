@@ -69,6 +69,8 @@ kubectl -n ingress-nginx get svc ingress-nginx-controller -o json | jq -r '.stat
 
 ################   DEPLOY HELM MONITORING   ################
 
+helm uninstall monitoring-tools
+
 helm upgrade --install monitoring-tools nexus/monitoring-tools \
   --namespace monitoring --create-namespace \
   --atomic --wait
