@@ -66,3 +66,5 @@ helm upgrade --install momo-store nexus/momo-store \
 ################   SHOW INGRESS IP   ################
 
 kubectl -n ingress-nginx get svc ingress-nginx-controller -o json | jq -r '.status.loadBalancer.ingress[].ip'
+
+##

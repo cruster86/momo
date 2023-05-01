@@ -1,30 +1,28 @@
----
 apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: alertmanager
-  namespace: {{ .Release.Namespace }}
-  labels:
-    app: alertmanager
 data:
   alertmanager.yml: |
     global:
       resolve_timeout: 1m
-      slack_api_url: '{{ .Values.slack_hook_url }}'
     route:
        group_wait: 10s
        group_interval: 30s
        repeat_interval: 30m
-       receiver: "slack"
+       receiver: "telegram"
        routes:
-         - receiver: "slack"
+         - receiver: "telegram"
            group_wait: 10s
            match_re:
              severity: critical|warning
            continue: true
     receivers:
-     - name: "slack"
-       slack_configs:
-         - send_resolved: true
-           channel: '{{ .Values.slack_channel }}'
-           text: "{{ "{{" }} range .Alerts {{ "}}" }}{{ "{{" }} .Annotations.summary {{ "}}" }}\n{{ "{{" }} .Annotations.description }}\n{{ "{{" }} end {{ "}}" }}"
+      - name: "telegram"
+        telegram_configs:
+          - send_resolved: true
+            bot_token: '5933756043:AAE8JLL5KIzgrNBeTP5e-1bkbJy4YRoeGjs'
+            chat_id: -1001813217062
+            message: "Notification!\nsummary: {{ .CommonAnnotations.summary }}\ndescription: {{ .CommonAnnotations.description }}"
+kind: ConfigMap
+metadata:
+  labels:
+    app: alertmanager
+  name: alertmanager
