@@ -15,6 +15,11 @@ updateStrategy:
     maxUnavailable: 25%
   type: RollingUpdate
 
+annotations:
+  prometheus.io/path: /metrics
+  prometheus.io/port: "8080"
+  prometheus.io/scrape: "true"
+
 service:
   name: frontend
   type: ClusterIP
