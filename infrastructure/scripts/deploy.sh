@@ -12,15 +12,26 @@ yc managed-kubernetes cluster list
 
 ################   DEPLOY INGRESS CONTROLLER   ################
 
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm repo update
-helm upgrade --install \
-  ingress-nginx ingress-nginx/ingress-nginx \
+echo ${NEXUS_REPO_PASS} | helm repo add nexus ${NEXUS_HELM_REPO} --username ${NEXUS_REPO_USER} --password-stdin
+helm repo update nexus
+helm upgrade --install ingress-nginx nexus/ingress-nginx \
   --namespace ingress-nginx --create-namespace \
-  --set controller.metrics.enabled=true
-  --set-string controller.podAnnotations."prometheus\.io/scrape"="true"
-  --set-string controller.podAnnotations."prometheus\.io/port"="10254"
+  --set controller.metrics.enabled=true \
+  --set controller.metrics.port=10254 \
+  --set-string controller.podAnnotations."prometheus\.io/scrape"="true" \
+  --set-string controller.podAnnotations."prometheus\.io/port"="10254" \
   --wait --atomic
+
+#helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+#helm repo update
+#helm upgrade --install \
+#  ingress-nginx ingress-nginx/ingress-nginx \
+#  --namespace ingress-nginx --create-namespace \
+#  --set controller.metrics.enabled=true \
+#  --set controller.metrics.port=10254 \
+#  --set-string controller.podAnnotations."prometheus\.io/scrape"="true" \
+#  --set-string controller.podAnnotations."prometheus\.io/port"="10254" \
+#  --wait --atomic
 
 ################   DEPLOY CERT MANAGER   ################
 
