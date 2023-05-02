@@ -46,7 +46,6 @@ variables:
   script:
     - set -x
     - cd infrastructure
-    - scripts/prepare.sh
     - scripts/deploy.sh
 
 .destroy-cluster:
