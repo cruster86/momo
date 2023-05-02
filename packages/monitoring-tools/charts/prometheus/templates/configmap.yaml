@@ -14,6 +14,10 @@ data:
     rule_files:
        - "/config/*"
     scrape_configs:
+    - job_name: 'kube-state-metrics'
+      scrape_interval: {{ $yandex.scrape_interval | default "60s" | quote }}
+      static_configs:
+        - targets: ['kube-state-metrics.monitoring.svc.cluster.local:8080']
     - job_name: kubernetes-pods
       kubernetes_sd_configs:
       - role: pod
