@@ -59,6 +59,8 @@ kubectl -n ingress-nginx get svc ingress-nginx-controller -o json | jq -r '.stat
 
 ################   DEPLOY MONITORING   ################
 
+echo ${NEXUS_REPO_PASS} | helm repo add nexus ${NEXUS_HELM_REPO} --username ${NEXUS_REPO_USER} --password-stdin
+helm repo update nexus
 helm upgrade --install monitoring-tools nexus/monitoring-tools \
   --namespace monitoring --create-namespace \
   --atomic --wait
