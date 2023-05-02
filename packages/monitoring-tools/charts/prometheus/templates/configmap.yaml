@@ -15,7 +15,7 @@ data:
        - "/config/*"
     scrape_configs:
     - job_name: 'kube-state-metrics'
-      scrape_interval: {{ $yandex.scrape_interval | default "60s" | quote }}
+      scrape_interval: 60s
       static_configs:
         - targets: ['kube-state-metrics.monitoring.svc.cluster.local:8080']
     - job_name: kubernetes-pods
