@@ -14,6 +14,10 @@ data:
     rule_files:
        - "/config/*"
     scrape_configs:
+    - job_name: 'ingress-nginx-controller'
+      scrape_interval: 60s
+      static_configs:
+        - targets: ['ingress-nginx-controller-metrics.ingress-nginx.svc.cluster.local:10254']
     - job_name: 'kube-state-metrics'
       scrape_interval: 60s
       static_configs:

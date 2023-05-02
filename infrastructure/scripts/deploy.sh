@@ -60,3 +60,12 @@ helm repo update nexus
 helm upgrade --install monitoring-tools nexus/monitoring-tools \
   --namespace monitoring --create-namespace \
   --atomic --wait
+
+################   DEPLOY KUBE-STATE-METRICS   ################
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update prometheus-community
+helm upgrade --install kube-state-metrics prometheus-community/kube-state-metrics\
+  --namespace monitoring \
+  --atomic --wait
+
