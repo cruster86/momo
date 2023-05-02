@@ -41,6 +41,22 @@ variables:
     - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
       --upload-file monitoring-tools-"${VERSION}".tgz
 
+.upload_cert-manager:
+  script:
+    - cd packages
+    - helm version
+    - helm package cert-manager/ --version "${VERSION}" --app-version "${VERSION}"
+    - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
+      --upload-file cert-manager-"${VERSION}".tgz
+
+.upload_ingress-nginx:
+  script:
+    - cd packages
+    - helm version
+    - helm package ingress-nginx/ --version "${VERSION}" --app-version "${VERSION}"
+    - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
+      --upload-file ingress-nginx-"${VERSION}".tgz
+
 ################   MAIN CI JOBS   ################
 
 momo-store upload:
@@ -58,3 +74,17 @@ monitoring-tools upload:
   extends:
     - .prepare_env
     - .upload_monitoring-tools
+
+cert-manager upload:
+  stage: upload
+  when: manual
+  extends:
+    - .prepare_env
+    - .upload_cert-manager
+
+ingress-nginx upload:
+  stage: upload
+  when: manual
+  extends:
+    - .prepare_env
+    - .upload_ingress-nginx

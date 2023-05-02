@@ -14,7 +14,7 @@ spec:
   tls:  
     - hosts:                           
         - "alertmanager-momo.sirius.online"
-      secretName: prometheus-tls
+      secretName: alertmanager-tls
   rules:
   - host: "alertmanager-momo.sirius.online"
     http:

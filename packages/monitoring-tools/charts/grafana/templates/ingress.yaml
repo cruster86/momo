@@ -14,7 +14,7 @@ spec:
   tls:  
     - hosts:                           
         - "grafana-momo.sirius.online"
-      secretName: prometheus-tls
+      secretName: grafana-tls
   rules:
   - host: "grafana-momo.sirius.online"
     http:
