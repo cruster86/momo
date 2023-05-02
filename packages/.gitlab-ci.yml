@@ -5,8 +5,8 @@ image: alpine:3.17.3
 
 variables:
   TAG: "${CI_COMMIT_TAG}"
-#  VERSION: "${TAG}"
-  VERSION: "v1.0.12"
+  VERSION: "${CI_COMMIT_SHA}"
+#  VERSION: "v1.0.13"
 
 ################   COMMON CI SCRIPTS   ################
 
@@ -14,6 +14,7 @@ variables:
   before_script:
     - set -x
     - export TAG="${TAG}"
+    - export VERSION="${VERSION}"
     - export "SSH_PUB_KEY=${SSH_PUB_KEY}"
     - export "NEXUS_REPO_USER=${NEXUS_REPO_USER}"
     - export "NEXUS_REPO_PASS=${NEXUS_REPO_PASS}"
@@ -26,15 +27,15 @@ variables:
 
 .upload_momo-store:
   script:
-    - cd helm
+    - cd packages
     - helm version
-    - helm package momo-store/ --version "${VERSION}" --app-version "${VERSION}"
+    - helm package momo-store/ --version "${TAG}" --app-version "${TAG}"
     - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
-      --upload-file momo-store-"${VERSION}".tgz
+      --upload-file momo-store-"${TAG}".tgz
 
 .upload_monitoring-tools:
   script:
-    - cd helm
+    - cd packages
     - helm version
     - helm package monitoring-tools/ --version "${VERSION}" --app-version "${VERSION}"
     - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
@@ -48,8 +49,8 @@ momo-store upload:
   extends:
     - .prepare_env
     - .upload_momo-store
-#  only:
-#    - tags
+  only:
+    - tags
 
 monitoring-tools upload:
   stage: upload

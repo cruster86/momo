@@ -21,22 +21,32 @@ frontend:
     changes:
       - frontend/**/*
 
-terraform:
+infrastructure:
   stage: module-pipelines
   trigger:
     include:
-      - "/terraform/.gitlab-ci.yml"
+      - "/infrastructure/.gitlab-ci.yml"
     strategy: depend
   only:
     changes:
-      - terraform/**/*
+      - infrastructure/**/*
 
-helm:
+helm packages:
   stage: module-pipelines
   trigger:
     include:
-      - "/helm/.gitlab-ci.yml"
+      - "/packages/.gitlab-ci.yml"
     strategy: depend
   only:
     changes:
-      - helm/**/*
+      - packages/**/*
+
+application:
+  stage: module-pipelines
+  trigger:
+    include:
+      - "/application/.gitlab-ci.yml"
+    strategy: depend
+  only:
+    changes:
+      - application/**/*

@@ -99,4 +99,67 @@ variable "k8s_version" {
   type    = string
   default = "1.22"
 }
+
+##############    Kubernetes Node Settings    ##############
+
+variable "node_platform_id" {
+  type    = string
+  default = "standard-v3"
+}
+
+variable "node_version" {
+  type    = string
+  default = "1.22"
+}
+
+variable "node_nat" {
+  default = true
+}
+
+variable "node_memory" {
+  default = "4"
+}
+
+variable "node_cores" {
+  default = "2"
+}
+
+variable "core_fraction" {
+  default = "20"
+}
+
+variable "node_disk_size" {
+  default = "32"
+}
+
+variable "node_disk_type" {
+  type    = string
+  default = "network-hdd"
+}
+
+variable "node_runtime" {
+  type    = string
+  default = "containerd"
+}
+
+variable "node_scale_policy" {
+  default = "1"
+}
+
+variable "node_location" {
+  type    = string
+  default = "ru-central1-a"
+}
+
+variable "node_scheduling" {
+  default = false
+}
+
+variable "node_auto_upgrade" {
+  default = false
+}
+
+variable "node_auto_repair" {
+  default = false
+}
 EOF

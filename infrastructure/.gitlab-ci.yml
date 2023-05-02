@@ -1,20 +1,21 @@
-image: alpine:3.17.3
-
 stages:
   - create
   - deploy
   - destroy
 
+image: alpine:3.17.3
+
 variables:
   TAG: "${CI_COMMIT_TAG}"
 #  VERSION: "${TAG}"
-  VERSION: "v1.0.6"
+#  VERSION: "v1.0.6"
 
 ################   COMMON CI SCRIPTS   ################
 
 .prepare_env:
   before_script:
     - set -x
+    - export TAG="${TAG}"
     - export VERSION="${VERSION}"
     - export "YC_TOKEN=${YC_TOKEN}"
     - export "YC_CLOUD_ID=${YC_CLOUD_ID}"
@@ -28,33 +29,30 @@ variables:
     - mkdir ~/.ssh
     - cp $SSH_PRIV_KEY ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
-    - chmod -R +x scripts/* terraform/scripts/*
+    - chmod -R +x scripts/* infrastructure/scripts/*
     - scripts/env.sh
 
-.cluster-create:
+.create-cluster:
   script:
     - set -x
-    - cd terraform
+    - cd infrastructure
     - scripts/prepare.sh
     - terraform init -backend-config=backend.conf
     - terraform validate && terraform plan
-    - scripts/create.sh apply -auto-approve
+    - terraform apply -auto-approve
     - terraform apply -refresh-only -auto-approve
-    - terraform state list
-  artifacts:
-    expire_in: 1 hour
-    paths:
-      - terraform/terraform.log 
+    - terraform state list 
 
-.momo-deploy:
-  script:
-    - cd terraform
-    - scripts/deploy.sh
-
-.cluster-destroy:
+.deploy-soft:
   script:
     - set -x
-    - cd terraform
+    - cd infrastructure
+    - scripts/deploy.sh
+
+.destroy-cluster:
+  script:
+    - set -x
+    - cd infrastructure
     - scripts/prepare.sh
     - terraform init -backend-config=backend.conf
     - terraform validate && terraform destroy -auto-approve
@@ -67,20 +65,18 @@ create cluster:
   when: manual
   extends:
     - .prepare_env
-    - .cluster-create
+    - .create-cluster
 
-deploy momo:
+deploy soft:
   stage: deploy
   when: manual
   extends:
     - .prepare_env
-    - .momo-deploy
-#  only:
-#    - tags
+    - .deploy-soft
 
 destroy cluster:
   stage: destroy
   when: manual
   extends:
     - .prepare_env
-    - .cluster-destroy
+    - .destroy-cluster

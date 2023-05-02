@@ -210,17 +210,17 @@ resource "yandex_kubernetes_node_group" "momo-group" {
   cluster_id  = yandex_kubernetes_cluster.k8s-corpsehead.id
   name        = "momo-group"
   description = "momo-group"
-  version     = "1.22"
+  version     = var.node_version
 
   labels = {
     "app" = "momo-store"
   }
 
   instance_template {
-    platform_id = "standard-v3"
+    platform_id = var.node_platform_id
 
     network_interface {
-      nat        = true
+      nat        = var.node_nat
       subnet_ids = ["${yandex_vpc_subnet.mysubnet.id}"]
 #      security_group_ids = [
 #        yandex_vpc_security_group.k8s-public-services.id,
@@ -229,39 +229,39 @@ resource "yandex_kubernetes_node_group" "momo-group" {
     }
 
     resources {
-      memory        = 4
-      cores         = 2
-      core_fraction = 20
+      memory        = var.node_memory
+      cores         = var.node_cores
+      core_fraction = var.core_fraction
     }
 
     boot_disk {
-      type = "network-hdd"
-      size = 32
+      type = var.node_disk_type
+      size = var.node_disk_size
     }
 
     scheduling_policy {
-      preemptible = false
+      preemptible = var.node_scheduling
     }
 
     container_runtime {
-      type = "containerd"
+      type = var.node_runtime
     }
   }
 
   scale_policy {
     fixed_scale {
-      size = 1
+      size = var.node_scale_policy
     }
   }
 
   allocation_policy {
     location {
-      zone = "ru-central1-a"
+      zone = var.node_location
     }
   }
 
   maintenance_policy {
-    auto_upgrade = false
-    auto_repair  = false
+    auto_upgrade = var.node_auto_upgrade
+    auto_repair  = var.node_auto_repair
   }
 }
