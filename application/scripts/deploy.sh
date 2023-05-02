@@ -2,6 +2,14 @@
 
 set -x
 
+################   CONNECT TO CLUSTER   ################
+
+yc config set token ${YC_TOKEN}
+yc config set cloud-id ${YC_CLOUD_ID}
+yc config set folder-id ${YC_FOLDER_ID}
+yc managed-kubernetes cluster get-credentials --id $(yc managed-kubernetes cluster list --format json | jq -r '.[].id') --external --force
+yc managed-kubernetes cluster list
+
 ################   DEPLOY MOMO-STORE   ################
 
 echo ${NEXUS_REPO_PASS} | helm repo add nexus ${NEXUS_HELM_REPO} --username ${NEXUS_REPO_USER} --password-stdin
