@@ -24,14 +24,21 @@ helm upgrade --install \
 
 ################   DEPLOY CERT MANAGER   ################
 
-helm repo add jetstack https://charts.jetstack.io
-helm repo update
-helm upgrade --install \
-  cert-manager jetstack/cert-manager \
+echo ${NEXUS_REPO_PASS} | helm repo add nexus ${NEXUS_HELM_REPO} --username ${NEXUS_REPO_USER} --password-stdin
+helm repo update nexus
+helm upgrade --install cert-manager nexus/cert-manager \
   --namespace cert-manager --create-namespace \
-  --version v1.11.0 \
   --set installCRDs=true \
-  --wait --atomic
+  --atomic --wait
+
+#helm repo add jetstack https://charts.jetstack.io
+#helm repo update
+#helm upgrade --install \
+#  cert-manager jetstack/cert-manager \
+#  --namespace cert-manager --create-namespace \
+#  --version v1.11.0 \
+#  --set installCRDs=true \
+#  --wait --atomic
 
 ################   DEPLOY CLUSTER ISSUER  ################
 
