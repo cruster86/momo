@@ -43,9 +43,9 @@ upload_nexus:
   stage: upload
   script:
     - cd frontend
-    - tar czf momo-store-frontend-${VERSION}.tar.gz dist
+    - tar czf momo-store-frontend-${TAG}.tar.gz dist
     - >       
-      curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-store-frontend-${VERSION}.tar.gz ${NEXUS_REPO_FRONT_URL}/momo-store-frontend/${VERSION}/momo-store-frontend-${VERSION}.tar.gz
+      curl -v -u "${NEXUS_REPO_USER}:${NEXUS_REPO_PASS}" --upload-file momo-store-frontend-${TAG}.tar.gz ${NEXUS_REPO_FRONT_URL}/momo-store-frontend/${TAG}/momo-store-frontend-${TAG}.tar.gz
   only:
     - tags
   needs:
@@ -59,8 +59,8 @@ build_&_push_image:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - cd frontend
-    - docker build -t $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION} .
-    - docker push $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION}
+    - docker build -t $CI_REGISTRY_IMAGE/momo-store-frontend:${TAG} .
+    - docker push $CI_REGISTRY_IMAGE/momo-store-frontend:${TAG}
   only:
     - tags
 
@@ -81,7 +81,7 @@ image_scan:
     - docker run --rm -e TRIVY_USERNAME=$CI_REGISTRY_USER -e TRIVY_PASSWORD=$CI_REGISTRY_PASSWORD
       gitlab.praktikum-services.ru:5050/zerodistance/momo-store/trivy:latest
       image --scanners vuln --severity HIGH,CRITICAL --no-progress
-      $CI_REGISTRY_IMAGE/momo-store-frontend:${VERSION} > frontend-scan-report.txt
+      $CI_REGISTRY_IMAGE/momo-store-frontend:${TAG} > frontend-scan-report.txt
   artifacts:
     expire_in: 1 hour
     paths:
