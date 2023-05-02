@@ -53,10 +53,6 @@ spec:
           class: nginx
 END
 
-################   SHOW INGRESS CONTROLLER IP   #################
-
-kubectl -n ingress-nginx get svc ingress-nginx-controller -o json | jq -r '.status.loadBalancer.ingress[].ip'
-
 ################   DEPLOY MONITORING   ################
 
 echo ${NEXUS_REPO_PASS} | helm repo add nexus ${NEXUS_HELM_REPO} --username ${NEXUS_REPO_USER} --password-stdin
