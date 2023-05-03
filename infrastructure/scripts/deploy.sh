@@ -24,22 +24,14 @@ helm upgrade --install ingress-nginx nexus/ingress-nginx \
 
 ################   DEPLOY CERT MANAGER   ################
 
-echo ${NEXUS_REPO_PASS} | helm repo add nexus ${NEXUS_HELM_REPO} --username ${NEXUS_REPO_USER} --password-stdin
-helm repo update nexus
-helm upgrade --install cert-manager nexus/cert-manager \
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm upgrade --install \
+  cert-manager jetstack/cert-manager \
   --namespace cert-manager --create-namespace \
-  --version v1.11.1 \
+  --version v1.11.0 \
   --set installCRDs=true \
-  --atomic --wait
-
-#helm repo add jetstack https://charts.jetstack.io
-#helm repo update
-#helm upgrade --install \
-#  cert-manager jetstack/cert-manager \
-#  --namespace cert-manager --create-namespace \
-#  --version v1.11.0 \
-#  --set installCRDs=true \
-#  --wait --atomic
+  --wait --atomic
 
 ################   DEPLOY CLUSTER ISSUER  ################
 
