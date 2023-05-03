@@ -7,8 +7,6 @@ image: alpine:3.17.3
 
 variables:
   TAG: "${CI_COMMIT_TAG}"
-#  VERSION: "${TAG}"
-#  VERSION: "v1.0.6"
 
 ################   COMMON CI SCRIPTS   ################
 
@@ -34,7 +32,6 @@ variables:
 
 .create-cluster:
   script:
-    - set -x
     - cd infrastructure
     - scripts/prepare.sh
     - terraform init -backend-config=backend.conf
@@ -45,13 +42,11 @@ variables:
 
 .deploy-soft:
   script:
-    - set -x
     - cd infrastructure
     - scripts/deploy.sh
 
 .destroy-cluster:
   script:
-    - set -x
     - cd infrastructure
     - scripts/prepare.sh
     - terraform init -backend-config=backend.conf

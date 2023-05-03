@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 ################   CONNECT TO CLUSTER   ################
 
 yc config set token ${YC_TOKEN}

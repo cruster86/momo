@@ -5,8 +5,6 @@ image: alpine:3.17.3
 
 variables:
   TAG: "${CI_COMMIT_TAG}"
-#  TAG: "${CI_COMMIT_SHA}"
-#  VERSION: "v1.0.6"
 
 ################   COMMON CI SCRIPTS   ################
 
@@ -14,7 +12,6 @@ variables:
   before_script:
     - set -x
     - export TAG="${TAG}"
-    - export VERSION="${VERSION}"
     - export "YC_TOKEN=${YC_TOKEN}"
     - export "YC_CLOUD_ID=${YC_CLOUD_ID}"
     - export "YC_FOLDER_ID=${YC_FOLDER_ID}"

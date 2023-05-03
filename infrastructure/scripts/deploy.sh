@@ -68,3 +68,12 @@ helm repo update prometheus-community
 helm upgrade --install kube-state-metrics prometheus-community/kube-state-metrics\
   --namespace monitoring \
   --atomic --wait
+
+################   DEPLOY GRAFANA LOKI   ################
+
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update grafana
+helm upgrade --install loki grafana/loki --namespace monitoring \
+  --set minio.enabled=true --set loki.auth_enabled=false \
+  --set read.replicas=1 --set write.replicas=1 --set backend.replicas=1 \
+  --atomic --wait
