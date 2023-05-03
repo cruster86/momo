@@ -71,16 +71,9 @@ helm upgrade --install kube-state-metrics prometheus-community/kube-state-metric
 
 ################   DEPLOY GRAFANA LOKI   ################
 
-echo ${NEXUS_REPO_PASS} | helm repo add nexus ${NEXUS_HELM_REPO} --username ${NEXUS_REPO_USER} --password-stdin
-helm repo update nexus
-helm upgrade --install loki nexus/loki \
-  --namespace monitoring --create-namespace \
-  --set loki.auth_enabled=false \
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update grafana
+helm upgrade --install loki grafana/loki --namespace monitoring \
+  --set minio.enabled=true --set loki.auth_enabled=false \
+  --set read.replicas=1 --set write.replicas=1 --set backend.replicas=1 \
   --atomic --wait
-
-#helm repo add grafana https://grafana.github.io/helm-charts
-#helm repo update grafana
-#helm upgrade --install loki grafana/loki --namespace monitoring \
-#  --set minio.enabled=true --set loki.auth_enabled=false \
-#  --set read.replicas=1 --set write.replicas=1 --set backend.replicas=1 \
-#  --atomic --wait

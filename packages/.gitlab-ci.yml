@@ -45,13 +45,6 @@ variables:
     - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
       --upload-file ingress-nginx-"${VERSION}".tgz
 
-.upload_loki:
-  script:
-    - cd packages
-    - helm package loki/
-    - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
-      --upload-file loki-"${VERSION}".tgz
-
 ################   MAIN CI JOBS   ################
 
 momo-store upload:
@@ -76,10 +69,3 @@ ingress-nginx upload:
   extends:
     - .prepare_env
     - .upload_ingress-nginx
-
-loki upload:
-  stage: upload
-  when: manual
-  extends:
-    - .prepare_env
-    - .upload_loki
