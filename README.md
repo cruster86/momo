@@ -59,9 +59,11 @@ helm-чарты:
     - ingress-nginx
     - cert-manager
     - cluster-issuer
-    - prometheus, grafana
+    - prometheus
+    - grafana
     - alertmanager
     - loki
+    - kube-state-metrics
   - `prepare.sh` - генерация конфигов terraform
 
 ## Директория Application
