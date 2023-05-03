@@ -22,34 +22,24 @@ helm upgrade --install ingress-nginx nexus/ingress-nginx \
   --set-string controller.podAnnotations."prometheus\.io/port"="10254" \
   --wait --atomic
 
-#helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-#helm repo update
-#helm upgrade --install \
-#  ingress-nginx ingress-nginx/ingress-nginx \
-#  --namespace ingress-nginx --create-namespace \
-#  --set controller.metrics.enabled=true \
-#  --set controller.metrics.port=10254 \
-#  --set-string controller.podAnnotations."prometheus\.io/scrape"="true" \
-#  --set-string controller.podAnnotations."prometheus\.io/port"="10254" \
-#  --wait --atomic
-
 ################   DEPLOY CERT MANAGER   ################
 
-#echo ${NEXUS_REPO_PASS} | helm repo add nexus ${NEXUS_HELM_REPO} --username ${NEXUS_REPO_USER} --password-stdin
-#helm repo update nexus
-#helm upgrade --install cert-manager nexus/cert-manager \
-#  --namespace cert-manager --create-namespace \
-#  --set installCRDs=true \
-#  --atomic --wait
-
-helm repo add jetstack https://charts.jetstack.io
-helm repo update
-helm upgrade --install \
-  cert-manager jetstack/cert-manager \
+echo ${NEXUS_REPO_PASS} | helm repo add nexus ${NEXUS_HELM_REPO} --username ${NEXUS_REPO_USER} --password-stdin
+helm repo update nexus
+helm upgrade --install cert-manager nexus/cert-manager \
   --namespace cert-manager --create-namespace \
-  --version v1.11.0 \
+  --version v1.11.1 \
   --set installCRDs=true \
-  --wait --atomic
+  --atomic --wait
+
+#helm repo add jetstack https://charts.jetstack.io
+#helm repo update
+#helm upgrade --install \
+#  cert-manager jetstack/cert-manager \
+#  --namespace cert-manager --create-namespace \
+#  --version v1.11.0 \
+#  --set installCRDs=true \
+#  --wait --atomic
 
 ################   DEPLOY CLUSTER ISSUER  ################
 
