@@ -38,13 +38,6 @@ variables:
     - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
       --upload-file monitoring-tools-"${VERSION}".tgz
 
-.upload_cert-manager:
-  script:
-    - cd packages
-    - helm package cert-manager/ --version "${VERSION}" --app-version "${VERSION}"
-    - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
-      --upload-file cert-manager-"${VERSION}".tgz
-
 .upload_ingress-nginx:
   script:
     - cd packages
@@ -55,7 +48,7 @@ variables:
 .upload_loki:
   script:
     - cd packages
-    - helm package loki/ --version "${VERSION}" --app-version "${VERSION}"
+    - helm package loki/
     - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
       --upload-file loki-"${VERSION}".tgz
 
@@ -76,13 +69,6 @@ monitoring-tools upload:
   extends:
     - .prepare_env
     - .upload_monitoring-tools
-
-cert-manager upload:
-  stage: upload
-  when: manual
-  extends:
-    - .prepare_env
-    - .upload_cert-manager
 
 ingress-nginx upload:
   stage: upload
