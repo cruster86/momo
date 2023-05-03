@@ -54,7 +54,7 @@ variables:
 
 .upload_loki:
   script:
-    - cd loki
+    - cd packages
     - helm package loki/ --version "${VERSION}" --app-version "${VERSION}"
     - curl -u "${NEXUS_REPO_USER}":"${NEXUS_REPO_PASS}" "${NEXUS_HELM_REPO}"
       --upload-file loki-"${VERSION}".tgz
