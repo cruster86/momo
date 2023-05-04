@@ -85,6 +85,6 @@ image_scan:
   artifacts:
     expire_in: 1 hour
     paths:
-      - backend/frontend-scan-report.txt
+      - frontend/frontend-scan-report.txt
   only:
     - tags

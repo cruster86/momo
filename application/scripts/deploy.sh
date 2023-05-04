@@ -18,8 +18,6 @@ helm upgrade --install momo-store nexus/momo-store \
   --set global.backServiceName=momo-store-backend --set global.backServicePort=8081 \
   --atomic --wait
 
-# --set global.tag="v1.0.5"
-
 ################   SHOW INGRESS CONTROLLER IP   #################
 
 kubectl -n ingress-nginx get svc ingress-nginx-controller -o json | jq -r '.status.loadBalancer.ingress[].ip'

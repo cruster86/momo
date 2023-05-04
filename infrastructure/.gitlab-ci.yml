@@ -12,7 +12,6 @@ variables:
 
 .prepare_env:
   before_script:
-    - set -x
     - export TAG="${TAG}"
     - export VERSION="${VERSION}"
     - export "YC_TOKEN=${YC_TOKEN}"

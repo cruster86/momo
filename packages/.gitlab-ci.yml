@@ -49,7 +49,6 @@ variables:
 
 momo-store upload:
   stage: upload
-  when: manual
   extends:
     - .prepare_env
     - .upload_momo-store
